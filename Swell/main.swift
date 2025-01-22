@@ -7,39 +7,66 @@
 
 import Foundation
 
-print("Swell")
-
 var runSwell = true
 
-let environment = [
-  "TERM": "xterm",
-  "HOME": "/Users/mauriceelliott",
-  "PATH":
-    "Users/mauriceelliott/.bun/bin:/Users/mauriceelliott/path_src:/usr/local/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Ghostty.app/Contents/MacOS",
-]
-
-
 while runSwell {
-  let process = Process()
-  print("\u{001B}[3;32m 󰶟 => \u{001B}[0;39m", terminator: "")
-  let input = readLine()
-  let pipe = Pipe()
+    print("\u{001B}[3;32m 󰶟 => \u{001B}[0;39m", terminator: "")
+    let input = sanitiseInput(input: readLine())
+    if input != nil {
+        if input![0] == "exit" {
+            runSwell = false
+        } else {
+            let cmd = input![0]
+            let args = input!
+            spawnProcess(command: cmd, arguments: args)
+        }
+    }
+}
 
-  if input == "exit" {
-    runSwell = false
+func sanitiseInput(input: String?) -> [String]? {
+
+  let splitInput = input!.split(separator: " ")
+
+  
+}
+
+func spawnProcess(command: String, arguments: [String]) {
+  let path = command
+  let arguments = arguments
+  //convert to argument that is readable by the C command.
+  var argv = arguments.map { strdup($0) }
+
+  // Null-terminate the array
+  argv.append(nil)
+
+  // Env variables
+  var envp: [UnsafeMutablePointer<CChar>?] = [nil]
+  envp.append(nil)
+
+  // Define file actions
+  var fileActions: posix_spawn_file_actions_t?
+  posix_spawn_file_actions_init(&fileActions)
+
+  // Define process attributes
+  var processAttributes: posix_spawnattr_t?
+  posix_spawnattr_init(&processAttributes)
+
+  // Call posix_spawnp
+  var pid: pid_t = 0
+  let spawnResult = posix_spawnp(&pid, path, &fileActions, &processAttributes, argv, envp)
+
+  if spawnResult == 0 {
+    var status: Int32 = 0
+    let waitResult = waitpid(pid, &status, 0)
+
+    if waitResult != pid {
+      print("Failed to wait for the process, error code: \(waitResult)")
+    }
   } else {
-    process.executableURL = URL.init(filePath: "/bin/ls")
-    process.environment = environment
-    process.arguments = ["-c", String(input!)]
-    process.standardError = pipe
-    process.standardOutput = pipe
+    print("Failed to spawn process, error code: \(spawnResult)")
+  }
 
-    try! process.run()
-    
-
-    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-    let output = String(data: data, encoding: .utf8) ?? ""
-
-    print(output)
+  for arg in argv {
+    free(arg)
   }
 }
