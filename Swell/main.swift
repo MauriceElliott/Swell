@@ -11,24 +11,27 @@ var runSwell = true
 
 while runSwell {
     print("\u{001B}[3;32m 󰶟 => \u{001B}[0;39m", terminator: "")
-    let input = sanitiseInput(input: readLine())
-    if input != nil {
-        if input![0] == "exit" {
+    // let input = sanitiseInput(input: readLine())
+    let inputc = readLine()
+    
+    if inputc != nil {
+        let input = inputc!.split(separator: " ")
+        if input[0] == "exit" {
             runSwell = false
         } else {
-            let cmd = input![0]
-            let args = input!
+            let cmd = String(input[0])
+            let args = [ String(input[0]), String(input[1]) ]
             spawnProcess(command: cmd, arguments: args)
         }
     }
 }
 
-func sanitiseInput(input: String?) -> [String]? {
+// func sanitiseInput(input: String?) -> [String]? {
 
-  let splitInput = input!.split(separator: " ")
+//   let splitInput = input!.split(separator: " ")
 
   
-}
+// }
 
 func spawnProcess(command: String, arguments: [String]) {
   let path = command
