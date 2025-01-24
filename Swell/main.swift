@@ -8,30 +8,42 @@
 import Foundation
 
 var runSwell = true
+typealias Command = (command: String, arguments: [String])
 
 while runSwell {
-    print("\u{001B}[3;32m 󰶟 => \u{001B}[0;39m", terminator: "")
-    // let input = sanitiseInput(input: readLine())
-    let inputc = readLine()
-    
-    if inputc != nil {
-        let input = inputc!.split(separator: " ")
-        if input[0] == "exit" {
-            runSwell = false
-        } else {
-            let cmd = String(input[0])
-            let args = [ String(input[0]), String(input[1]) ]
-            spawnProcess(command: cmd, arguments: args)
-        }
+  print("\u{001B}[3;32m 󰶟 => \u{001B}[0;39m", terminator: "")
+  let inputa = sanitiseInput(input: readLine())
+
+  if inputa != nil {
+    let cmd = inputa!
+    if cmd.command == "exit" {
+      runSwell = false
+    } else {
+      spawnProcess(command: cmd.command, arguments: cmd.arguments)
     }
+  }
 }
 
-// func sanitiseInput(input: String?) -> [String]? {
+func sanitiseInput(input: String?) -> Command? {
 
-//   let splitInput = input!.split(separator: " ")
+  if input == nil { return nil }
 
-  
-// }
+    let splitInput = input!.split(separator: " ").map { String($0) }
+  var command = ""
+  var arguments = [""]
+  if splitInput[0].contains("/") {
+      command = String(splitInput[0])
+      arguments = [ splitInput[0].substring(from: splitInput[0].lastIndex(of: "/")!) ]
+      if(splitInput.count > 1) {
+          arguments.append(contentsOf: splitInput.filter { $0.contains("/") == false })
+      }
+  } else {
+    command = splitInput[0]
+    arguments = splitInput
+  }
+
+  return (command, arguments)
+}
 
 func spawnProcess(command: String, arguments: [String]) {
   let path = command
