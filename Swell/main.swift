@@ -7,6 +7,12 @@
 
 import Foundation
 
+func sigintHandler(sig_num: Int32) -> Void {
+  fflush(stdout)
+}
+
+signal(SIGINT, sigintHandler);
+
 var runSwell = true
 typealias Command = (command: String, arguments: [String])
 
@@ -16,7 +22,7 @@ while runSwell {
 
   if inputa != nil {
     let cmd = inputa!
-    if cmd.command == "exit" {
+     if cmd.command == "exit" {
       runSwell = false
     } else {
       spawnProcess(command: cmd.command, arguments: cmd.arguments)
