@@ -9,11 +9,9 @@ import Foundation
 
 // Define the environmental variables
 let env: [String: String] = [
-    "TERM": "xterm-256color",
-    "COLORTERM":"truecolor",
+  "TERM": "xterm-256color",
+  "COLORTERM": "truecolor",
 ]
-
-// Convert the environmental variables to C strings
 
 var runSwell = true
 typealias Command = (command: String, arguments: [String])
@@ -24,7 +22,7 @@ while runSwell {
 
   if inputa != nil {
     let cmd = inputa!
-     if cmd.command == "exit" {
+    if cmd.command == "exit" {
       runSwell = false
     } else {
       spawnProcess(command: cmd.command, arguments: cmd.arguments)
@@ -35,15 +33,15 @@ while runSwell {
 func sanitiseInput(input: String?) -> Command? {
   if input == "" { return nil }
 
-    let splitInput = input!.split(separator: " ").map { String($0) }
+  let splitInput = input!.split(separator: " ").map { String($0) }
   var command = ""
   var arguments = [""]
   if splitInput[0].contains("/") {
-      command = String(splitInput[0])
-      arguments = [ splitInput[0].substring(from: splitInput[0].lastIndex(of: "/")!) ]
-      if(splitInput.count > 1) {
-          arguments.append(contentsOf: splitInput.filter { $0.contains("/") == false })
-      }
+    command = String(splitInput[0])
+    arguments = [splitInput[0].substring(from: splitInput[0].lastIndex(of: "/")!)]
+    if splitInput.count > 1 {
+      arguments.append(contentsOf: splitInput.filter { $0.contains("/") == false })
+    }
   } else {
     command = splitInput[0]
     arguments = splitInput
