@@ -7,12 +7,6 @@
 
 import Foundation
 
-func sigintHandler(sig_num: Int32) -> Void {
-  fflush(stdout)
-}
-
-signal(SIGINT, sigintHandler);
-
 var runSwell = true
 typealias Command = (command: String, arguments: [String])
 
@@ -31,8 +25,7 @@ while runSwell {
 }
 
 func sanitiseInput(input: String?) -> Command? {
-
-  if input == nil { return nil }
+  if input == "" { return nil }
 
     let splitInput = input!.split(separator: " ").map { String($0) }
   var command = ""
