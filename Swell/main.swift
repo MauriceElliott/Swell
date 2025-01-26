@@ -9,7 +9,7 @@ import Foundation
 
 // Define the environmental variables
 let env: [String: String] = [
-    "TERM": "xterm-256color",
+    "TERM": "xterm-ghostty",
     "COLORTERM":"truecolor",
 ]
 
