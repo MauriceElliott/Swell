@@ -9,7 +9,7 @@ import Foundation
 
 // Define the environmental variables
 let env: [String: String] = [
-    "TERM": "xterm-ghostty",
+    "TERM": "xterm-256color",
     "COLORTERM":"truecolor",
 ]
 
@@ -61,7 +61,8 @@ func spawnProcess(command: String, arguments: [String]) {
   argv.append(nil)
 
   // Env variables
-  var envp: [UnsafeMutablePointer<CChar>?] = env.map { strdup("\($0)=\($1)") } + [nil]
+  var envp: [UnsafeMutablePointer<CChar>?] =
+    env.map { strdup("\($0)=\($1)") } + [nil]
   envp.append(nil)
 
   // Define file actions
@@ -90,4 +91,6 @@ func spawnProcess(command: String, arguments: [String]) {
   for arg in argv {
     free(arg)
   }
+  posix_spawn_file_actions_destroy(&fileActions)
+  posix_spawnattr_destroy(&processAttributes)
 }
