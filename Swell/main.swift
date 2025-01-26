@@ -7,6 +7,14 @@
 
 import Foundation
 
+// Define the environmental variables
+let env: [String: String] = [
+    "TERM": "xterm-256color",
+    "COLORTERM":"truecolor",
+]
+
+// Convert the environmental variables to C strings
+
 var runSwell = true
 typealias Command = (command: String, arguments: [String])
 
@@ -40,7 +48,6 @@ func sanitiseInput(input: String?) -> Command? {
     command = splitInput[0]
     arguments = splitInput
   }
-
   return (command, arguments)
 }
 
@@ -54,7 +61,7 @@ func spawnProcess(command: String, arguments: [String]) {
   argv.append(nil)
 
   // Env variables
-  var envp: [UnsafeMutablePointer<CChar>?] = [nil]
+  var envp: [UnsafeMutablePointer<CChar>?] = env.map { strdup("\($0)=\($1)") } + [nil]
   envp.append(nil)
 
   // Define file actions
