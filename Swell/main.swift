@@ -13,8 +13,15 @@ let env: [String: String] = [
     "COLORTERM": "truecolor",
 ]
 
+struct Session {
+    let homeDir = FileManager.default.homeDirectoryForCurrentUser.path()
+    var currentDir = FileManager.default.currentDirectoryPath
+}
+
+
 var runSwell = true
 typealias Command = (command: String, arguments: [String])
+var _session = Session()
 
 while runSwell {
     print("\u{001B}[3;32m 󰶟  \(getPSD()) => \u{001B}[0;39m", terminator: "")
@@ -35,8 +42,7 @@ while runSwell {
 
 func getPSD() -> String {
     let currentDirectory = FileManager.default.currentDirectoryPath
-    let homeDirectory = FileManager.default.homeDirectoryForCurrentUser.path()
-    let directoryFromHome = currentDirectory.replacingOccurrences(of: homeDirectory, with: "~/")
+    let directoryFromHome = currentDirectory.replacingOccurrences(of: _session.homeDir, with: "~/")
     return directoryFromHome
 }
 
@@ -105,8 +111,18 @@ func spawnProcess(command: String, arguments: [String]) {
 
 func changeDirectory(arguments: [String]) {
     if(arguments[1] == "~") {
-        let homeDir = FileManager.default.homeDirectoryForCurrentUser.path()
-        FileManager.default.changeCurrentDirectoryPath(homeDir)
+        FileManager.default.changeCurrentDirectoryPath(_session.homeDir)
+    } else if (arguments[1] == "..") {
+        let currentDirList = _session.currentDir.split(separator: "/")
+        let currentDirListLength = currentDirList.count
+        let sectionToRemove = currentDirList[currentDirListLength-1]
+        let newDir = _session.currentDir.replacingOccurrences(of: sectionToRemove, with: "")
+        FileManager.default.changeCurrentDirectoryPath(newDir)
+        _session.currentDir = newDir
+    } else {
+        let newDir = _session.currentDir + "/" + arguments[1]
+        FileManager.default.changeCurrentDirectoryPath(newDir)
+        _session.currentDir = newDir
     }
 }
 
