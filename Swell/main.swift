@@ -104,6 +104,9 @@ func spawnProcess(command: String, arguments: [String]) {
 }
 
 func changeDirectory(arguments: [String]) {
-    
+    if(arguments[1] == "~") {
+        let homeDir = FileManager.default.homeDirectoryForCurrentUser.path()
+        FileManager.default.changeCurrentDirectoryPath(homeDir)
+    }
 }
 
