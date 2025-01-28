@@ -22,9 +22,12 @@ while runSwell {
     
     if inputa != nil {
         let cmd = inputa!
-        if cmd.command == "exit" {
-            runSwell = false
-        } else {
+        switch cmd.command {
+        case "exit":
+            runSwell = false;
+        case "cd":
+            changeDirectory(arguments: cmd.arguments)
+        default:    
             spawnProcess(command: cmd.command, arguments: cmd.arguments)
         }
     }
@@ -33,8 +36,6 @@ while runSwell {
 func getPSD() -> String {
     let currentDirectory = FileManager.default.currentDirectoryPath
     let homeDirectory = FileManager.default.homeDirectoryForCurrentUser.path()
-    print(currentDirectory)
-    print(homeDirectory)
     let directoryFromHome = currentDirectory.replacingOccurrences(of: homeDirectory, with: "~/")
     return directoryFromHome
 }
@@ -101,3 +102,8 @@ func spawnProcess(command: String, arguments: [String]) {
     posix_spawn_file_actions_destroy(&fileActions)
     posix_spawnattr_destroy(&processAttributes)
 }
+
+func changeDirectory(arguments: [String]) {
+    
+}
+
