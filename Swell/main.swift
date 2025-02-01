@@ -11,11 +11,13 @@ while runSwell {
     if inputa != nil {
         var cmd = inputa!
         let alias = _aliases[(cmd.arguments[0])]
-        if (alias != nil){
+        if (alias != nil) {
             cmd.command = alias!.command
             if (cmd.arguments.count > 1) {
                 let remainingArgs = cmd.arguments[1...]
                 cmd.arguments = alias!.arguments + remainingArgs
+            } else {
+                cmd.arguments = alias!.arguments
             }
         }
         switch cmd.command {
