@@ -2,7 +2,7 @@ import Foundation
 
 var runSwell = true
 typealias Command = (command: String, arguments: [String])
-_ = initConfig()
+_ = readConfig()
 
 while runSwell {
     print("\u{001B}[3;32m 󰶟  \(getPrompt()) => \u{001B}[0;39m", terminator: "")
