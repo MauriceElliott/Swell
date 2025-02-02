@@ -1,6 +1,5 @@
 
 func readConfig() -> Bool {
-    _aliases["ll"] = ("ls", ["ls", "-lA"])
-
+//    addAlias(alias: "ll", cmd: "ls -lA")
     return true
 }
