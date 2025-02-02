@@ -8,7 +8,7 @@ func sanitiseInput(input: String?) -> Command? {
     var arguments = [""]
     if splitInput[0].contains("/") {
         command = String(splitInput[0])
-        arguments = [splitInput[0].substring(from: splitInput[0].lastIndex(of: "/")!)]
+        arguments = [ String(splitInput[0][splitInput[0].lastIndex(of: "/")!]) ]
         if splitInput.count > 1 {
             arguments.append(contentsOf: splitInput.filter { $0.contains("/") == false })
         }
