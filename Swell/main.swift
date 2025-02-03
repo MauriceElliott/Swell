@@ -1,7 +1,13 @@
 import Foundation
 
-var runSwell = true
+let fileManager = FileManager.default
+
 typealias Command = (command: String, arguments: [String])
+
+var _session = Session()
+
+var runSwell = true
+
 _ = readConfig()
 
 while runSwell {
