@@ -12,7 +12,7 @@ readConfig()
 
 while runSwell {
     print(getPrompt(), terminator: "")
-    let input = sanitiseInput(input: readLine())
+    let input = sanitiseInput(input: readInput())
     
     if input != nil {
         var cmd = input!
@@ -20,4 +20,3 @@ while runSwell {
         mainSwitch(cmd: cmd)
     }
 }
-
