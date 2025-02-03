@@ -8,7 +8,7 @@ var _session = Session()
 
 var runSwell = true
 
-_ = readConfig()
+readConfig()
 
 while runSwell {
     print(getPrompt(), terminator: "")

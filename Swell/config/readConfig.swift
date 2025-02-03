@@ -1,13 +1,13 @@
 import Foundation
+let configFilePath = "\(fileManager.homeDirectoryForCurrentUser.path())/.config/swell/config.swell"
 
-func readConfig() -> Bool {
-    let configFilePath = "\(fileManager.homeDirectoryForCurrentUser.path())/.config/swell/config.swell"
+func readConfig() {
     var configFileContents = ""
     if fileManager.fileExists(atPath: configFilePath) {
         do {
             configFileContents = try String(contentsOfFile: configFilePath, encoding: .utf8)
         } catch {
-            print("error reading configuration!")
+            print("error reading configuration file, must be utf8 encoded!")
         }
     }
     if !configFileContents.isEmpty {
@@ -17,5 +17,4 @@ func readConfig() -> Bool {
             mainSwitch(cmd: cmd)
         }
     }
-    return true
 }
