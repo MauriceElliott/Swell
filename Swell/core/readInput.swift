@@ -6,7 +6,6 @@ func readInput() -> String {
     var input = ""
 
     var continueReading = true
-    var tabComplete = false
     
     while continueReading {
         var oldTerm = termios()
@@ -18,8 +17,10 @@ func readInput() -> String {
         var cCharacter: [CChar] = [0, 0]
         let readBytes = read(STDIN_FILENO, &cCharacter, 1)
 
+
         tcsetattr(STDIN_FILENO, TCSANOW, &oldTerm)
         if readBytes > 0 {
+            //required due to stdout not printing while in raw mode
             let sCharacter = String(cString: cCharacter)
             switch sCharacter {
             case "\r":
@@ -27,9 +28,17 @@ func readInput() -> String {
             case "\t":
                 continueReading = false
                 input += sCharacter
+            case "\u{7F}":  // Handle backspace (ASCII 127)
+                if !input.isEmpty {
+                    input.removeLast()
+                    // Move cursor back, clear character, move cursor back again, \u{1B}[1D\u{1B}[K\u{1B}[1D
+                    print("\u{1B}[1D\u{1B}[K", terminator: "")
+                }
             default:
+                print(sCharacter, terminator: "")
                 input += sCharacter
             }
+            fflush(stdout)
         }
     }
 

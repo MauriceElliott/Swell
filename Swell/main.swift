@@ -12,6 +12,8 @@ readConfig()
 
 while runSwell {
     print(getPrompt(), terminator: "")
+    fflush(stdout)
+
     var rawInput = readInput()
     if rawInput.last == "\t" {
         rawInput = tabComplete(fuzz: rawInput)
