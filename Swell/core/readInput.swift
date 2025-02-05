@@ -6,6 +6,7 @@ func readInput() -> String {
     var input = ""
 
     var continueReading = true
+    var tabComplete = false
     
     while continueReading {
         var oldTerm = termios()
@@ -23,6 +24,9 @@ func readInput() -> String {
             switch sCharacter {
             case "\r":
                 continueReading = false
+            case "\t":
+                continueReading = false
+                input += sCharacter
             default:
                 input += sCharacter
             }

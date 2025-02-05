@@ -12,7 +12,11 @@ readConfig()
 
 while runSwell {
     print(getPrompt(), terminator: "")
-    let input = sanitiseInput(input: readInput())
+    var rawInput = readInput()
+    if rawInput.last == "\t" {
+        rawInput = tabComplete(fuzz: rawInput)
+    }
+    let input = sanitiseInput(input: rawInput)
     
     if input != nil {
         var cmd = input!
