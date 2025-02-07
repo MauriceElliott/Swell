@@ -26,8 +26,11 @@ func readInput() -> String {
             case "\r":
                 continueReading = false
             case "\t":
-                continueReading = false
-                input += sCharacter
+                let completed = tabComplete(fuzz: input)
+                if completed != input {
+                    input += completed
+                    print(completed, terminator: "")
+                }
             case "\u{7F}":  // Handle backspace (ASCII 127)
                 if !input.isEmpty {
                     input.removeLast()

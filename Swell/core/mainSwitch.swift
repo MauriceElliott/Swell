@@ -7,8 +7,6 @@ func mainSwitch(cmd: Command){
         changeDirectory(arguments: cmd.arguments)
     case "alias":
         addAlias(alias: cmd.arguments)
-    case "fizzbuzz":
-        print("fizzbuzz")
     default:
         spawnProcess(command: cmd.command, arguments: cmd.arguments)
     }

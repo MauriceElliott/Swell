@@ -1,10 +1,10 @@
 
-var _tabCompletions: [String] = ["fizzbuzz"]
+var _tabCompletions: [String] = ["fizzbuzz", "swell", "test"]
 
 func tabComplete(fuzz: String) -> String {
-    assert(fuzz.last == "\t")
-    var match = fuzz
-    match.removeLast()
-    let startsWith = _tabCompletions.filter{$0.starts(with: match)}
-    return startsWith.first ?? fuzz
+    let startsWith = _tabCompletions.filter{$0.starts(with: fuzz)}
+    if(startsWith.count > 0) {
+        return startsWith.first!.replacingOccurrences(of: fuzz, with: "")
+    }
+    return fuzz
 }
