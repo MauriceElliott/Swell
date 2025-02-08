@@ -25,6 +25,7 @@ func readInput() -> String {
             switch sCharacter {
             case "\r":
                 continueReading = false
+                print("\n", terminator: "")
             case "\t":
                 let completed = tabComplete(fuzz: input)
                 if completed != input {
@@ -34,7 +35,6 @@ func readInput() -> String {
             case "\u{7F}":  // Handle backspace (ASCII 127)
                 if !input.isEmpty {
                     input.removeLast()
-                    // Move cursor back, clear character, move cursor back again, \u{1B}[1D\u{1B}[K\u{1B}[1D
                     print("\u{1B}[1D\u{1B}[K", terminator: "")
                 }
             default:
