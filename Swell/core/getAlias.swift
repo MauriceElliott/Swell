@@ -1,14 +1,16 @@
 
-func getAlias(cmd: inout Command) {
+func getAlias(cmd: Command) -> Command {
     let alias = _session.aliases[(cmd.arguments[0])]
+    var command = cmd;
     if (alias != nil) {
-        cmd.command = alias!.command
+        command.command = alias!.command
         if (cmd.arguments.count > 1) {
             let remainingArgs = cmd.arguments[1...]
-            cmd.arguments = alias!.arguments + remainingArgs
+            command.arguments = alias!.arguments + remainingArgs
         } else {
-            cmd.arguments = alias!.arguments
+            command.arguments = alias!.arguments
         }
     }
+    return command
 }
 

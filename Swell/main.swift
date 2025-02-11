@@ -15,12 +15,7 @@ while runSwell {
     print(getPrompt(), terminator: "")
     fflush(stdout)
 
-    let rawInput = readInput()
-    let input = sanitiseInput(input: rawInput)
-    
-    if input != nil {
-        var cmd = input!
-        getAlias(cmd: &cmd)
-        mainSwitch(cmd: cmd)
+    if let cmd = sanitiseInput(input: readInput()) {
+        mainSwitch(cmd: getAlias(cmd: cmd))
     }
 }
