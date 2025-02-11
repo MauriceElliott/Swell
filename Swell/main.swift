@@ -15,7 +15,7 @@ while runSwell {
     print(getPrompt(), terminator: "")
     fflush(stdout)
 
-    var rawInput = readInput()
+    let rawInput = readInput()
     let input = sanitiseInput(input: rawInput)
     
     if input != nil {
