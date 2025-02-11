@@ -3,6 +3,7 @@ import Foundation
 func changeDirectory(arguments: [String]) {
     if arguments.count == 1 {
         fileManager.changeCurrentDirectoryPath(_session.homeDir)
+        _session.currentDir = _session.homeDir
         return
     }
     switch arguments[1] {
