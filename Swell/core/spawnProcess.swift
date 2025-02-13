@@ -16,7 +16,7 @@ func spawnProcess(command: String, arguments: [String]) {
     argv.append(nil)
     
     // Env variables
-    var envp: [UnsafeMutablePointer<CChar>?] = env.map { strdup("\($0)=\($1)") } + [nil]
+    let envp: [UnsafeMutablePointer<CChar>?] = env.map { strdup("\($0)=\($1)") } + [nil]
     
     // Define file actions
     var fileActions: posix_spawn_file_actions_t?
@@ -30,10 +30,11 @@ func spawnProcess(command: String, arguments: [String]) {
     var pid: pid_t = 0
     let spawnResult = posix_spawnp(&pid, path, &fileActions, &processAttributes, argv, envp)
     
+    // if the process was spawned, wait for it to finish
     if spawnResult == 0 {
         var status: Int32 = 0
         let waitResult = waitpid(pid, &status, 0)
-        
+        // If the waitResult matches the pid, the process was successful.
         if waitResult != pid {
             print("Failed to wait for the process, error code: \(waitResult)")
         }
@@ -41,6 +42,7 @@ func spawnProcess(command: String, arguments: [String]) {
         print("Failed to spawn process, error code: \(spawnResult)")
     }
     
+    // Free the allocated memory
     for arg in argv {
         free(arg)
     }
