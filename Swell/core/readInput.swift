@@ -38,24 +38,48 @@ func readInput() -> String {
                     input.removeLast()
                     print("\u{1B}[1D\u{1B}[K", terminator: "")
                 }
-            case "\u{1B}": // Handle arrow keys
+                
+            /*
+             So, when sending an up or down arrow key as raw input
+             u{1B} is sent, followed by a lone [ followed by either A or B
+             In other scenarios, you'd expect them to be sent all at once
+             But for some reason in my case they are being sent separately.
+             
+             TODO: Fix up and down arrow input handling
+             Either this needs to be abstracted or I need to find a better way to resolve this?
+             */
+
+            case "\u{1B}":
                 readingArrowKeys = true;
-                //for some reason, this thing gets output when you input an arrow key as a separate character, followed by [A or [B.
             case "[":
                 if readingArrowKeys {
                     readingArrowKeys = true
-                } //basically do nothing because again, this is within the same loop from a single press of the up arrow (bro)
-            case "A": // Handle up arrow
-                if readingArrowKeys {
-                    let previousHistory = readHistory(direction: direction.up)
-                    print("\u{1B}[2K\r\(previousHistory)", terminator: "")
-                    readingArrowKeys = false
+                } else {
+                    fallthrough
                 }
-            case "B": // Handle down arrow
+            case "A":
                 if readingArrowKeys {
-                    let nextHistory = readHistory(direction: direction.down)
-                    print("\u{1B}[2K\r\(nextHistory)", terminator: "")
+                    for i in input {
+                        print("\u{1B}[D\u{1B}[K", terminator: "")
+                    }
+                    let previousHistory = readHistory(direction: direction.up)
+                    input = previousHistory
+                    print(input, terminator: "")
                     readingArrowKeys = false
+                } else {
+                    fallthrough
+                }
+            case "B":
+                if readingArrowKeys {
+                    for i in input {
+                        print("\u{1B}[D\u{1B}[K", terminator: "")
+                    }
+                    let historyEntry = readHistory(direction: direction.down)
+                    input = historyEntry
+                    print(historyEntry, terminator: "")
+                    readingArrowKeys = false
+                } else {
+                    fallthrough
                 }
             default:
                 print(sCharacter, terminator: "")
