@@ -37,6 +37,12 @@ func readInput() -> String {
                     input.removeLast()
                     print("\u{1B}[1D\u{1B}[K", terminator: "")
                 }
+            case "\033[A": // Handle up arrow
+                let previousHistory = readHistory(direction: direction.up)
+                print("\u{1B}[2K\r\(previousHistory)", terminator: "")
+            case "\034[A": // Handle down arrow
+                let nextHistory = readHistory(direction: direction.down)
+                print("\u{1B}[2K\r\(nextHistory)", terminator: "")
             default:
                 print(sCharacter, terminator: "")
                 input += sCharacter

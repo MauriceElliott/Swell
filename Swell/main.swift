@@ -1,5 +1,6 @@
 import Foundation
 
+//test comment from within a running Swell, lets see if I can use git to commit
 let fileManager = FileManager.default
 
 typealias Command = (command: String, arguments: [String])
@@ -17,5 +18,6 @@ while runSwell {
 
     if let cmd = sanitiseInput(input: readInput()) {
         mainSwitch(cmd: getAlias(cmd: cmd))
+        updateHistory(cmd: cmd)
     }
 }
