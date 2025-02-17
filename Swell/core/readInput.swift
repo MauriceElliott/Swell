@@ -6,6 +6,7 @@ func readInput() -> String {
     var input = ""
 
     var continueReading = true
+    var readingArrowKeys = false
     
     while continueReading {
         var oldTerm = termios()
@@ -37,12 +38,19 @@ func readInput() -> String {
                     input.removeLast()
                     print("\u{1B}[1D\u{1B}[K", terminator: "")
                 }
-            case "\033[A": // Handle up arrow
-                let previousHistory = readHistory(direction: direction.up)
-                print("\u{1B}[2K\r\(previousHistory)", terminator: "")
-            case "\034[A": // Handle down arrow
-                let nextHistory = readHistory(direction: direction.down)
-                print("\u{1B}[2K\r\(nextHistory)", terminator: "")
+            case "\u{1B}": // Handle arrow keys
+                readingArrowKeys = true; //Do nothing
+            case "[A": // Handle up arrow
+                if readingArrowKeys {
+                    let previousHistory = readHistory(direction: direction.up)
+                    print("\u{1B}[2K\r\(previousHistory)", terminator: "")
+                    readingArrowKeys = false
+                }
+            case "[B": // Handle down arrow
+                if readingArrowKeys {
+                    let nextHistory = readHistory(direction: direction.down)
+                    print("\u{1B}[2K\r\(nextHistory)", terminator: "")
+                }
             default:
                 print(sCharacter, terminator: "")
                 input += sCharacter
