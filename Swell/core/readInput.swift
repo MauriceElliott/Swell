@@ -21,7 +21,7 @@ func readInput() -> String {
 
         tcsetattr(STDIN_FILENO, TCSANOW, &oldTerm)
         if readBytes > 0 {
-            //required due to stdout not printing while in raw mode
+            //required due to stdout not printing while in raw mode "\u{fffd}"
             let sCharacter = String(cString: cCharacter)
             switch sCharacter {
             case "\r":
@@ -39,17 +39,23 @@ func readInput() -> String {
                     print("\u{1B}[1D\u{1B}[K", terminator: "")
                 }
             case "\u{1B}": // Handle arrow keys
-                readingArrowKeys = true; //Do nothing
-            case "[A": // Handle up arrow
+                readingArrowKeys = true;
+                //for some reason, this thing gets output when you input an arrow key as a separate character, followed by [A or [B.
+            case "[":
+                if readingArrowKeys {
+                    readingArrowKeys = true
+                } //basically do nothing because again, this is within the same loop from a single press of the up arrow (bro)
+            case "A": // Handle up arrow
                 if readingArrowKeys {
                     let previousHistory = readHistory(direction: direction.up)
                     print("\u{1B}[2K\r\(previousHistory)", terminator: "")
                     readingArrowKeys = false
                 }
-            case "[B": // Handle down arrow
+            case "B": // Handle down arrow
                 if readingArrowKeys {
                     let nextHistory = readHistory(direction: direction.down)
                     print("\u{1B}[2K\r\(nextHistory)", terminator: "")
+                    readingArrowKeys = false
                 }
             default:
                 print(sCharacter, terminator: "")
