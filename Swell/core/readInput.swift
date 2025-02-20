@@ -52,8 +52,19 @@ func readInput() -> String {
             case "\u{1B}":
                 readingArrowKeys = true;
             case "[":
+                if !readingArrowKeys {
+                    readingArrowKeys = false
+                    fallthrough
+                }
+            case "B":
                 if readingArrowKeys {
-                    readingArrowKeys = true
+                    for i in input {
+                        print("\u{1B}[D\u{1B}[K", terminator: "")
+                    }
+                    let previousHistory = readHistory(direction: direction.down)
+                    input = previousHistory
+                    print(input, terminator: "")
+                    readingArrowKeys = false
                 } else {
                     fallthrough
                 }
@@ -62,19 +73,7 @@ func readInput() -> String {
                     for i in input {
                         print("\u{1B}[D\u{1B}[K", terminator: "")
                     }
-                    let previousHistory = readHistory(direction: direction.up)
-                    input = previousHistory
-                    print(input, terminator: "")
-                    readingArrowKeys = false
-                } else {
-                    fallthrough
-                }
-            case "B":
-                if readingArrowKeys {
-                    for i in input {
-                        print("\u{1B}[D\u{1B}[K", terminator: "")
-                    }
-                    let historyEntry = readHistory(direction: direction.down)
+                    let historyEntry = readHistory(direction: direction.up)
                     input = historyEntry
                     print(historyEntry, terminator: "")
                     readingArrowKeys = false
