@@ -7,4 +7,5 @@ struct Session {
     var availableCommands: [String] = getAvailableCommands()
     var history: [Command] = []
     var historyIndex = 0
+    var lastKeyPressed = ""
 }
