@@ -7,7 +7,6 @@ let package = Package(
     name: "Swell",
     platforms: [
         .macOS(.v13),
-        .linux(.v5_8)
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -35,7 +34,14 @@ let package = Package(
                 "core/getPrompt.swift",
                 "core/getAvailableCommands.swift",
                 "core/sanitiseInput.swift",
+                "core/getAlias.swift",
+                "core/mainHistory.swift",
+                "core/readHistory.swift",
+                "core/tabComplete.swift",
+                "core/updateHistory.swift",
+                "core/mainSwitch.swift",
                 "commands/changeDirectory.swift",
+                "commands/addAlias.swift",
                 "config/readConfig.swift"
             ]
         ),

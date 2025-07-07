@@ -1,15 +1,4 @@
 import Foundation
-import Darwin
-
-struct keyPressed {
-    up = "up",
-    down = "down",
-    left = "left",
-    right = "right",
-    enter = "enter",
-    tab = "tab",
-    backspace = "backspace",
-}
 
 func readInput() -> String {
     //Set terminal to take raw input (this means you don't need to wait for an enter to parse the typed input)
@@ -35,7 +24,6 @@ func readInput() -> String {
             let sCharacter = String(cString: cCharacter)
             switch sCharacter {
             case "\r":
-                _session.lastCommand = "ENTER"
                 continueReading = false
                 print("\n", terminator: "")
             case "\t":
