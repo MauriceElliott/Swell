@@ -1,13 +1,13 @@
 import Foundation
 
 func readInput() -> String {
-    //Set terminal to take raw input (this means you don't need to wait for an enter to parse the typed input)
     var input = ""
 
     var continueReading = true
     var readingArrowKeys = false
     
     while continueReading {
+        //Set terminal to take raw input (this means you don't need to wait for an enter to parse the typed input)
         var oldTerm = termios()
         tcgetattr(STDIN_FILENO, &oldTerm)
         var newTerm = oldTerm;
@@ -57,7 +57,7 @@ func readInput() -> String {
                 }
             case "B":
                 if readingArrowKeys {
-                    for i in input {
+                    for _ in input {
                         print("\u{1B}[D\u{1B}[K", terminator: "")
                     }
                     let previousHistory = readHistory(direction: direction.down)
@@ -69,7 +69,7 @@ func readInput() -> String {
                 }
             case "A":
                 if readingArrowKeys {
-                    for i in input {
+                    for _ in input {
                         print("\u{1B}[D\u{1B}[K", terminator: "")
                     }
                     let historyEntry = readHistory(direction: direction.up)
