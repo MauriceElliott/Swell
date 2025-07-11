@@ -19,11 +19,20 @@ func spawnProcess(command: String, arguments: [String]) {
     let envp: [UnsafeMutablePointer<CChar>?] = env.map { strdup("\($0)=\($1)") } + [nil]
     
     // Define file actions
+    #if os(macOS) //compilation on linux vs macos treats these values differently.
+    var fileActions: posix_spawn_file_actions_t?
+    #else
     var fileActions: posix_spawn_file_actions_t = posix_spawn_file_actions_t()
+    #endif
     posix_spawn_file_actions_init(&fileActions)
     
     // Define process attributes
+    #if os(macOS)
+    var processAttributes: posix_spawnattr_t?
+    #else
     var processAttributes: posix_spawnattr_t = posix_spawnattr_t()
+    #endif
+
     posix_spawnattr_init(&processAttributes)
     
     // Call posix_spawnp
