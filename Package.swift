@@ -43,7 +43,10 @@ let package = Package(
                 "commands/changeDirectory.swift",
                 "commands/addAlias.swift",
                 "config/readConfig.swift"
-            ]
+            ],
+            linkerSettings: [
+                .linkedLibrary("Kernel32")
+            ],
         ),
         .testTarget(
             name: "SwellTests",

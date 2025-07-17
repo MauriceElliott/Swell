@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:Swell}",
+            "name": "Debug swell",
+            "program": "${workspaceFolder:Swell}/.build/debug/swell",
+            "preLaunchTask": "swift: Build Debug swell"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:Swell}",
+            "name": "Release swell",
+            "program": "${workspaceFolder:Swell}/.build/release/swell",
+            "preLaunchTask": "swift: Build Release swell"
+        }
+    ]
+}
