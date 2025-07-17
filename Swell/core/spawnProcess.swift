@@ -6,6 +6,7 @@ let env: [String: String] = [
     "COLORTERM": "truecolor",
 ]
 
+#if os(macOS) || os(Linux)
 func spawnProcess(command: String, arguments: [String]) {
     let path = command
     let arguments = arguments
@@ -58,3 +59,46 @@ func spawnProcess(command: String, arguments: [String]) {
     posix_spawn_file_actions_destroy(&fileActions)
     posix_spawnattr_destroy(&processAttributes)
 }
+#else
+import WinSDK
+func spawnProcess(command: String, arguments: [String]) {
+    //Windows weirdness, CreateProcessW which is the equivalent to posix_spawner takes the entire line as the input.
+    let commandline = "\(command) \(arguments.joined(" "))"
+
+    // Process Handles
+    var startupInfo = STARTUPINFOW()
+    var processInfo = PROCESS_INFORMATION()
+
+    //This essentially sets the allocation size, but also tells the OS which handle version of STARTUPINFOW is being used.
+    startupInfo.cb = DWORD(MemoryLayout<STARTUPINFOW>.size)
+
+    let success = commandLine.withUnsafeMutableBufferPointer { commandPointer -> Bool in
+        let commandAddr = UnsafeMutableRawPointer(commandPointer.baseAddress!).assumingMemoryBound(to: WCHAR.self)
+
+        return CreateProcessW(
+            nil,
+            commandAddr,
+            nil,
+            nil,
+            false,
+            0,
+            nil,
+            &startupInfo,
+            &processInfo
+        )
+    }
+
+    //success or cleanup
+    if success {
+        WaitForSingleObject(processInfo.hProcess, INFINITE)
+
+        CloseHandle(processInfo.hProcess)
+        CloseHandle(processInfo.hThread)
+
+        return true
+     } else {
+        print("Failed to create process, Error code: \(GetLastError())")
+        return false
+    }
+}
+#endif
