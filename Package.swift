@@ -35,22 +35,23 @@ let package = Package(
                 "core/getAvailableCommands.swift",
                 "core/sanitiseInput.swift",
                 "core/getAlias.swift",
-                "core/mainHistory.swift",
                 "core/readHistory.swift",
                 "core/tabComplete.swift",
                 "core/updateHistory.swift",
                 "core/mainSwitch.swift",
                 "commands/changeDirectory.swift",
                 "commands/addAlias.swift",
-                "config/readConfig.swift"
-            ],
-            linkerSettings: [
-                .linkedLibrary("Kernel32")
-            ],
-        ),
-        .testTarget(
-            name: "SwellTests",
-            dependencies: ["Swell"]
+                "config/readConfig.swift",
+                "language/types.swift"
+            ]
         ),
     ]
 )
+
+#if os(Windows)
+if let swellTarget = package.targets.first(where: { $0.name == "Swell" }) {
+    swellTarget.linkerSettings = [
+        .linkedLibrary("Kernel32")
+    ]
+}
+#endif
