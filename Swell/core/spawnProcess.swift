@@ -12,13 +12,13 @@ func spawnProcess(command: String, arguments: [String]) {
     let arguments = arguments
     //convert to argument that is readable by the C command.
     var argv = arguments.map { strdup($0) }
-    
+
     // Null-terminate the array
     argv.append(nil)
-    
+
     // Env variables
     let envp: [UnsafeMutablePointer<CChar>?] = env.map { strdup("\($0)=\($1)") } + [nil]
-    
+
     // Define file actions
     #if os(macOS) //compilation on linux vs macos treats these values differently.
     var fileActions: posix_spawn_file_actions_t?
@@ -26,7 +26,7 @@ func spawnProcess(command: String, arguments: [String]) {
     var fileActions: posix_spawn_file_actions_t = posix_spawn_file_actions_t()
     #endif
     posix_spawn_file_actions_init(&fileActions)
-    
+
     // Define process attributes
     #if os(macOS)
     var processAttributes: posix_spawnattr_t?
@@ -35,11 +35,11 @@ func spawnProcess(command: String, arguments: [String]) {
     #endif
 
     posix_spawnattr_init(&processAttributes)
-    
+
     // Call posix_spawnp
     var pid: pid_t = 0
     let spawnResult = posix_spawnp(&pid, path, &fileActions, &processAttributes, argv, envp)
-    
+
     // if the process was spawned, wait for it to finish
     if spawnResult == 0 {
         var status: Int32 = 0
@@ -51,7 +51,7 @@ func spawnProcess(command: String, arguments: [String]) {
     } else {
         print("Failed to spawn process, error code: \(spawnResult)")
     }
-    
+
     // Free the allocated memory
     for arg in argv {
         free(arg)
@@ -63,7 +63,7 @@ func spawnProcess(command: String, arguments: [String]) {
 import WinSDK
 func spawnProcess(command: String, arguments: [String]) {
     //Windows weirdness, CreateProcessW which is the equivalent to posix_spawner takes the entire line as the input.
-    let commandline = "\(command) \(arguments.joined(" "))"
+    let commandLine = "\(command) \(arguments.joined(separator: " "))"
 
     // Process Handles
     var startupInfo = STARTUPINFOW()
@@ -72,19 +72,20 @@ func spawnProcess(command: String, arguments: [String]) {
     //This essentially sets the allocation size, but also tells the OS which handle version of STARTUPINFOW is being used.
     startupInfo.cb = DWORD(MemoryLayout<STARTUPINFOW>.size)
 
-    let success = commandLine.withUnsafeMutableBufferPointer { commandPointer -> Bool in
-        let commandAddr = UnsafeMutableRawPointer(commandPointer.baseAddress!).assumingMemoryBound(to: WCHAR.self)
-
+    var commandLineWide = Array(commandLine.utf16)
+    commandLineWide.append(0) // null termination
+    let success = commandLineWide.withUnsafeMutableBufferPointer { buffer in
         return CreateProcessW(
-            nil,
-            commandAddr,
-            nil,
-            nil,
-            false,
-            0,
-            nil,
-            &startupInfo,
-            &processInfo
+            nil,                                    // lpApplicationName
+            buffer.baseAddress,                     // lpCommandLine
+            nil,                                    // lpProcessAttributes
+            nil,                                    // lpThreadAttributes
+            false,                                  // bInheritHandles
+            0,                                      // dwCreationFlags
+            nil,                                    // lpEnvironment
+            nil,                                    // lpCurrentDirectory
+            &startupInfo,                          // lpStartupInfo
+            &processInfo                           // lpProcessInformation
         )
     }
 
@@ -94,11 +95,8 @@ func spawnProcess(command: String, arguments: [String]) {
 
         CloseHandle(processInfo.hProcess)
         CloseHandle(processInfo.hThread)
-
-        return true
      } else {
         print("Failed to create process, Error code: \(GetLastError())")
-        return false
     }
 }
 #endif

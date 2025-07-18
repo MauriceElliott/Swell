@@ -13,7 +13,7 @@ func readRawInput() -> String? {
     var charsRead: DWORD = 0
     let success = ReadConsoleW(handle, &buffer, 1, &charsRead, nil)
     if success && charsRead > 0 {
-        return String(cString: buffer[0])
+        return String(buffer[0])
     } else {
         return nil
     }
@@ -27,7 +27,7 @@ func readRawInput() -> String? {
     var newTerm = oldTerm;
     cfmakeraw(&newTerm)
     tcsetattr(STDIN_FILENO, TCSANOW, &newTerm)
-        
+
     var cCharacter: [CChar] = [0, 0]
     let readBytes = read(STDIN_FILENO, &cCharacter, 1)
 
@@ -46,7 +46,7 @@ func readInput() -> String {
 
     var continueReading = true
     var readingArrowKeys = false
-    
+
     while continueReading {
         let sCharacter = readRawInput()
         if sCharacter != nil {
@@ -65,13 +65,13 @@ func readInput() -> String {
                     input.removeLast()
                     print("\u{1B}[1D\u{1B}[K", terminator: "")
                 }
-                
+
             /*
                 So, when sending an up or down arrow key as raw input
                 u{1B} is sent, followed by a lone [ followed by either A or B
                 In other scenarios, you'd expect them to be sent all at once
                 But for some reason in my case they are being sent separately.
-                
+
                 TODO: Fix up and down arrow input handling
                 Either this needs to be abstracted or I need to find a better way to resolve this?
                 */
@@ -117,4 +117,3 @@ func readInput() -> String {
 
     return input
 }
-
