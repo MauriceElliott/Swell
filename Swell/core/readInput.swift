@@ -20,7 +20,6 @@ func readRawInput() -> String? {
 }
 #else
 // Linux and MacOS way of reading from the commandline.
-import Glibc
 func readRawInput() -> String? {
     var oldTerm = termios()
     tcgetattr(STDIN_FILENO, &oldTerm)
