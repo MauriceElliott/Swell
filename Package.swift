@@ -26,32 +26,24 @@ let package = Package(
             name: "Swell",
             dependencies: [],
             path: "Swell",
-            sources: [
-                "main.swift",
-                "core/readInput.swift",
-                "core/spawnProcess.swift", 
-                "core/session.swift",
-                "core/getPrompt.swift",
-                "core/getAvailableCommands.swift",
-                "core/sanitiseInput.swift",
-                "core/getAlias.swift",
-                "core/readHistory.swift",
-                "core/tabComplete.swift",
-                "core/updateHistory.swift",
-                "core/mainSwitch.swift",
-                "commands/changeDirectory.swift",
-                "commands/addAlias.swift",
-                "config/readConfig.swift",
-                "language/types.swift"
-            ]
+            // sources: [
+            //     "main.swift",
+            //     "core/readInput.swift",
+            //     "core/spawnProcess.swift", 
+            //     "core/Session.swift",
+            //     "core/getPrompt.swift",
+            //     "core/getAvailableCommands.swift",
+            //     "core/sanitiseInput.swift",
+            //     "core/getAlias.swift",
+            //     "core/readHistory.swift",
+            //     "core/tabComplete.swift",
+            //     "core/updateHistory.swift",
+            //     "core/mainSwitch.swift",
+            //     "commands/changeDirectory.swift",
+            //     "commands/addAlias.swift",
+            //     "config/readConfig.swift",
+            //     "language/types.swift"
+            // ]
         ),
     ]
 )
-
-#if os(Windows)
-if let swellTarget = package.targets.first(where: { $0.name == "Swell" }) {
-    swellTarget.linkerSettings = [
-        .linkedLibrary("Kernel32")
-    ]
-}
-#endif

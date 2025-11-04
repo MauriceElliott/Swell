@@ -1,13 +1,10 @@
 import Foundation
 
-//test comment from within a running Swell, lets see if I can use git to commit
-let fileManager = FileManager.default
-
 typealias Command = (command: String, arguments: [String])
 typealias tabCompleteResult = (command: String, tabCompleted: Bool)
+let fileManager = FileManager.default
 
-var _session = Session()
-
+var _session = Session.shared
 var runSwell = true
 
 readConfig()
