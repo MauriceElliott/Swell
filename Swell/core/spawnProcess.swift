@@ -6,7 +6,6 @@ let env: [String: String] = [
     "COLORTERM": "truecolor",
 ]
 
-#if os(macOS) || os(Linux)
 func spawnProcess(command: String, arguments: [String]) {
     let path = command
     let arguments = arguments
@@ -59,44 +58,3 @@ func spawnProcess(command: String, arguments: [String]) {
     posix_spawn_file_actions_destroy(&fileActions)
     posix_spawnattr_destroy(&processAttributes)
 }
-#else
-import WinSDK
-func spawnProcess(command: String, arguments: [String]) {
-    //Windows weirdness, CreateProcessW which is the equivalent to posix_spawner takes the entire line as the input.
-    let commandLine = "\(command) \(arguments.joined(separator: " "))"
-
-    // Process Handles
-    var startupInfo = STARTUPINFOW()
-    var processInfo = PROCESS_INFORMATION()
-
-    //This essentially sets the allocation size, but also tells the OS which handle version of STARTUPINFOW is being used.
-    startupInfo.cb = DWORD(MemoryLayout<STARTUPINFOW>.size)
-
-    var commandLineWide = Array(commandLine.utf16)
-    commandLineWide.append(0) // null termination
-    let success = commandLineWide.withUnsafeMutableBufferPointer { buffer in
-        return CreateProcessW(
-            nil,                                    // lpApplicationName
-            buffer.baseAddress,                     // lpCommandLine
-            nil,                                    // lpProcessAttributes
-            nil,                                    // lpThreadAttributes
-            false,                                  // bInheritHandles
-            0,                                      // dwCreationFlags
-            nil,                                    // lpEnvironment
-            nil,                                    // lpCurrentDirectory
-            &startupInfo,                          // lpStartupInfo
-            &processInfo                           // lpProcessInformation
-        )
-    }
-
-    //success or cleanup
-    if success {
-        WaitForSingleObject(processInfo.hProcess, INFINITE)
-
-        CloseHandle(processInfo.hProcess)
-        CloseHandle(processInfo.hThread)
-     } else {
-        print("Failed to create process, Error code: \(GetLastError())")
-    }
-}
-#endif

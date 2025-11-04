@@ -1,24 +1,5 @@
 import Foundation
-#if os(Windows)
-// Windows way of reading from the commandline.
-import WinSDK
-func readRawInput() -> String? {
-    let handle = GetStdHandle(STD_INPUT_HANDLE)
-    var oldMode: DWORD = 0
-    guard GetConsoleMode(handle, &oldMode) else { return nil }
-    let newMode: UInt32 = oldMode & ~UInt32((ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT))
-    guard SetConsoleMode(handle, newMode) else { return nil }
-    defer { SetConsoleMode(handle, oldMode) }
-    var buffer: [WCHAR] = [0]
-    var charsRead: DWORD = 0
-    let success = ReadConsoleW(handle, &buffer, 1, &charsRead, nil)
-    if success && charsRead > 0 {
-        return String(buffer[0])
-    } else {
-        return nil
-    }
-}
-#else
+
 // Linux and MacOS way of reading from the commandline.
 func readRawInput() -> String? {
     var oldTerm = termios()
@@ -37,8 +18,6 @@ func readRawInput() -> String? {
         return nil
     }
 }
-#endif
-
 
 func readInput() -> String {
     var input = ""
