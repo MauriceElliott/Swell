@@ -4,13 +4,13 @@ enum direction {
 }
 
 func readHistory(direction: direction) -> String {
-    _session.historyIndex = direction == .up ? _session.historyIndex - 1: _session.historyIndex + 1;
-    if (_session.historyIndex < 0) {
-        _session.historyIndex = 0
-    } else if (_session.historyIndex >= _session.history.count) {
-        _session.historyIndex = _session.history.count - 1
+    Session.shared.historyIndex = direction == .up ? Session.shared.historyIndex - 1: Session.shared.historyIndex + 1;
+    if (Session.shared.historyIndex < 0) {
+        Session.shared.historyIndex = 0
+    } else if (Session.shared.historyIndex >= Session.shared.history.count) {
+        Session.shared.historyIndex = Session.shared.history.count - 1
     }
-    let entry = _session.history[_session.historyIndex]
+    let entry = Session.shared.history[Session.shared.historyIndex]
     var result = ""
     for arg in entry.arguments {
         result += arg + " "

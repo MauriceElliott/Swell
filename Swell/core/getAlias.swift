@@ -1,6 +1,6 @@
 
 func getAlias(cmd: Command) -> Command {
-    let alias = _session.aliases[(cmd.arguments[0])]
+    let alias = Session.shared.aliases[(cmd.arguments[0])]
     var command = cmd;
     if (alias != nil) {
         command.command = alias!.command

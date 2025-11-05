@@ -4,7 +4,6 @@ typealias Command = (command: String, arguments: [String])
 typealias tabCompleteResult = (command: String, tabCompleted: Bool)
 let fileManager = FileManager.default
 
-var _session = Session.shared
 var runSwell = true
 
 readConfig()
@@ -17,4 +16,6 @@ while runSwell {
         mainSwitch(cmd: getAlias(cmd: cmd))
         updateHistory(cmd: cmd)
     }
+
+    Session.shared.update()
 }

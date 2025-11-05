@@ -1,9 +1,9 @@
 
 func updateHistory(cmd: Command) {
-    if(_session.history.count == 0) {
-        _session.history.append(cmd)
-    } else if (_session.history.last! != cmd) {
-        _session.history.append(cmd)
+    if(Session.shared.history.count == 0) {
+        Session.shared.history.append(cmd)
+    } else if (Session.shared.history.last! != cmd) {
+        Session.shared.history.append(cmd)
     }
-    _session.historyIndex = _session.history.count
+    Session.shared.historyIndex = Session.shared.history.count
 }

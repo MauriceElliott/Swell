@@ -2,26 +2,25 @@ import Foundation
 
 func changeDirectory(arguments: [String]) {
     if arguments.count == 1 {
-        _ = fileManager.changeCurrentDirectoryPath(_session.homeDir)
-        _session.currentDir = _session.homeDir
+        _ = fileManager.changeCurrentDirectoryPath(Session.shared.homeDir)
         return
     }
     switch arguments[1] {
     case "~":
-        _ = fileManager.changeCurrentDirectoryPath(_session.homeDir)
+        _ = fileManager.changeCurrentDirectoryPath(Session.shared.homeDir)
     case "..":
-        let currentDirList = _session.currentDir.split(separator: "/")
+        let currentDirList = Session.shared.currentDir.split(separator: "/")
         if let sectionToRemove = currentDirList.last {
-            let newDir = _session.currentDir.replacingOccurrences(of: "/\(sectionToRemove)", with: "")
+            let newDir = Session.shared.currentDir.replacingOccurrences(of: "/\(sectionToRemove)", with: "")
             _ = fileManager.changeCurrentDirectoryPath(newDir)
-            _session.currentDir = newDir
+            Session.shared.currentDir = newDir
         }
     case "/":
         _ = fileManager.changeCurrentDirectoryPath("/")
-        _session.currentDir = "/"
+        Session.shared.currentDir = "/"
     default:
-        let newDir = _session.currentDir + "/" + arguments[1]
+        let newDir = Session.shared.currentDir + "/" + arguments[1]
         _ = fileManager.changeCurrentDirectoryPath(newDir)
-        _session.currentDir = newDir
+        Session.shared.currentDir = newDir
     }
 }

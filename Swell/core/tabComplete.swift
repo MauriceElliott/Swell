@@ -4,7 +4,7 @@ func tabComplete(fuzz: String) -> String {
         return ""
     }
     if fuzz.split(separator: " ").count == 1 && fuzz.last != " " {
-        let startsWith = _session.availableCommands.filter{$0.starts(with: fuzz)}
+        let startsWith = Session.shared.availableCommands.filter{$0.starts(with: fuzz)}
         if(startsWith.count > 0) {
             return startsWith.first!.replacingOccurrences(of: fuzz, with: "")
         }
