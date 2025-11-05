@@ -18,7 +18,7 @@ class ConfigManager {
 			return main;
 		}
 	}
-	func load(state: SessionState) {
+	func loadConfiguration(state: inout SessionState) {
 		let fileDir = getFileDirectory(state.homeDir)
 		var configFileContents = ""
     	do {
@@ -30,7 +30,7 @@ class ConfigManager {
     	    let parsedConfigFile = configFileContents.split(separator: "\n")
     	    for l in parsedConfigFile {
     	        let node = parse(input: String(l))
-				evaluate(node: node)
+				evaluate(node: node, state: &state)
     	    }
     	}
 	}
@@ -41,12 +41,28 @@ class ConfigManager {
 		    "TERM": "xterm-256color",
 		    "COLORTERM": "truecolor",
 		]
-		let newSession = SessionState(
+		var newSession = SessionState(
 			environment: env,
 			homeDirectory: homeDir,
 			currentDirectory: currentDir
 		)
 
+		self.updateAvailableCommands(state: &newSession)
 		return newSession
 	}
+	func updateAvailableCommands(state: inout SessionState) {
+	    var commands: [String] = []
+	    let path = ProcessInfo.processInfo.environment["PATH"] ?? ""
+	    let pathDirectories = path.split(separator: ":").map { String($0) }
+	    for dir in pathDirectories {
+	        let contents = try? FileManager.default.contentsOfDirectory(atPath: dir)
+	        if contents == nil { continue }
+	        for content in contents! {
+	            let splitContent = content.split(separator: "/").map { String($0) }
+	            commands.append(splitContent.last!)
+	        }
+	    }
+	    state.availableCommands = commands
+	}
+
 }
