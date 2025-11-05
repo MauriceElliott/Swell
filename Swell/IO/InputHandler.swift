@@ -101,7 +101,6 @@ enum direction {
 }
 
 func readHistory(direction: direction, state: inout SessionState) -> String {
-    state.historyIndex = direction == .up ? state.historyIndex - 1: state.historyIndex + 1;
     if (state.historyIndex < 0) {
         state.historyIndex = 0
     } else if (state.historyIndex >= state.history.count) {
@@ -112,6 +111,7 @@ func readHistory(direction: direction, state: inout SessionState) -> String {
     for arg in entry.arguments {
         result += arg + " "
     }
+    state.historyIndex = direction == .up ? state.historyIndex - 1: state.historyIndex + 1;
     return result
 }
 
