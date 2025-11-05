@@ -1,9 +1,8 @@
-import Foundation
 
-func sanitiseInput(input: String?) -> Command? {
-    if input == "" { return nil }
+func parse(input: String) -> ASTNode {
+	if input == "" {  return ASTNode.empty }
     
-    let splitInput = input!.split(separator: " ").map { String($0) }
+    let splitInput = input.split(separator: " ").map { String($0) }
     var command = ""
     var arguments = [""]
     if splitInput[0].contains("/") {
@@ -16,5 +15,5 @@ func sanitiseInput(input: String?) -> Command? {
         command = splitInput[0]
         arguments = splitInput
     }
-    return (command, arguments)
+    return ASTNode.command((command, arguments))
 }

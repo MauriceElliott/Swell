@@ -1,6 +1,5 @@
 import Foundation
 
-// Linux and MacOS way of reading from the commandline.
 func readRawInput() -> String? {
     var oldTerm = termios()
     tcgetattr(STDIN_FILENO, &oldTerm)
@@ -19,7 +18,7 @@ func readRawInput() -> String? {
     }
 }
 
-func readInput() -> String {
+func readInput(state: inout SessionState) -> String {
     var input = ""
 
     var continueReading = true
@@ -33,7 +32,7 @@ func readInput() -> String {
                 continueReading = false
                 print("\n", terminator: "")
             case "\t":
-                let completed = tabComplete(fuzz: input)
+                let completed = tabComplete(fuzz: input, state: state)
                 if completed != input {
                     input += completed
                     print(completed, terminator: "")
@@ -66,7 +65,7 @@ func readInput() -> String {
                     for _ in input {
                         print("\u{1B}[D\u{1B}[K", terminator: "")
                     }
-                    let previousHistory = readHistory(direction: direction.down)
+                    let previousHistory = readHistory(direction: direction.down, state: &state)
                     input = previousHistory
                     print(input, terminator: "")
                     readingArrowKeys = false
@@ -78,7 +77,7 @@ func readInput() -> String {
                     for _ in input {
                         print("\u{1B}[D\u{1B}[K", terminator: "")
                     }
-                    let historyEntry = readHistory(direction: direction.up)
+                    let historyEntry = readHistory(direction: direction.up, state: &state)
                     input = historyEntry
                     print(historyEntry, terminator: "")
                     readingArrowKeys = false
@@ -94,4 +93,41 @@ func readInput() -> String {
     }
 
     return input
+}
+
+enum direction {
+    case up
+    case down
+}
+
+func readHistory(direction: direction, state: inout SessionState) -> String {
+    if (state.historyIndex < 0) {
+        state.historyIndex = 0
+    } else if (state.historyIndex >= state.history.count) {
+        state.historyIndex = state.history.count - 1
+    }
+    let entry = state.history[state.historyIndex]
+    var result = ""
+    for arg in entry.arguments {
+        result += arg + " "
+    }
+    state.historyIndex = direction == .up ? state.historyIndex - 1: state.historyIndex + 1;
+    return result
+}
+
+
+func tabComplete(fuzz: String, state: borrowing SessionState) -> String {
+    if fuzz.count == 0 {
+        return ""
+    }
+    if fuzz.split(separator: " ").count == 1 && fuzz.last != " " {
+        let startsWith = state.availableCommands.filter{$0.starts(with: fuzz)}
+        if(startsWith.count > 0) {
+            return startsWith.first!.replacingOccurrences(of: fuzz, with: "")
+        }
+    } else if fuzz.split(separator: " ").count > 1 || fuzz.last == " " {
+        //to be continued, this needs to autocomplete paths
+    }
+    
+    return fuzz
 }

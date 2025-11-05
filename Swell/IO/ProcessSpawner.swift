@@ -1,12 +1,8 @@
 import Foundation
 
 //this is just here for testing, should be removed once env is retrieved correctly
-let env: [String: String] = [
-    "TERM": "xterm-256color",
-    "COLORTERM": "truecolor",
-]
 
-func spawnProcess(command: String, arguments: [String]) {
+func spawnProcess(command: String, arguments: [String], state: borrowing SessionState) {
     let path = command
     let arguments = arguments
     //convert to argument that is readable by the C command.
@@ -16,7 +12,7 @@ func spawnProcess(command: String, arguments: [String]) {
     argv.append(nil)
 
     // Env variables
-    let envp: [UnsafeMutablePointer<CChar>?] = env.map { strdup("\($0)=\($1)") } + [nil]
+    let envp: [UnsafeMutablePointer<CChar>?] = state.environment.map { strdup("\($0)=\($1)") } + [nil]
 
     // Define file actions
     #if os(macOS) //compilation on linux vs macos treats these values differently.
