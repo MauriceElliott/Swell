@@ -1,10 +1,6 @@
 import Foundation
 
 //this is just here for testing, should be removed once env is retrieved correctly
-let env: [String: String] = [
-    "TERM": "xterm-256color",
-    "COLORTERM": "truecolor",
-]
 
 func spawnProcess(command: String, arguments: [String]) {
     let path = command
