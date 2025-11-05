@@ -2,20 +2,12 @@ import Foundation
 
 typealias Command = (command: String, arguments: [String])
 typealias tabCompleteResult = (command: String, tabCompleted: Bool)
-let fileManager = FileManager.default
 
-var runSwell = true
+var sessionState = ConfigManager().initSessionState()
 
-readConfig()
-
-while runSwell {
-    print(getPrompt(), terminator: "")
+while sessionState.cont {
+    print(getPrompt(state: sessionState), terminator: "")
     fflush(stdout)
 
-    if let cmd = sanitiseInput(input: readInput()) {
-        mainSwitch(cmd: getAlias(cmd: cmd))
-        updateHistory(cmd: cmd)
-    }
-
-    Session.shared.update()
+    evaluate(node: parse(input: readInput(state: &sessionState)), state: &sessionState)
 }

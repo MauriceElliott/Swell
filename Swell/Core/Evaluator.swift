@@ -9,13 +9,13 @@ func evaluate(node: ASTNode, state: inout SessionState) {
 				case "exit":
 					state.cont = false
 				default:
-					spawnProcess(command: cmd.command, arguments: cmd.arguments)
+					spawnProcess(command: cmd.command, arguments: cmd.arguments, state: state)
 			}
 		case .pipeline(let nodes):
         	for node in nodes {
 				evaluate(node: node, state: &state)	
 			}
     	default:
-        	spawnProcess(command: "", arguments: [""])
+        	spawnProcess(command: "", arguments: [""], state: state)
     }
 }
