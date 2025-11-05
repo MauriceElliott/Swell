@@ -1,8 +1,5 @@
 import Foundation
 
-typealias Command = (command: String, arguments: [String])
-typealias tabCompleteResult = (command: String, tabCompleted: Bool)
-
 var sessionState = ConfigManager().initSessionState()
 
 while sessionState.cont {
