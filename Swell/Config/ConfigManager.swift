@@ -2,7 +2,6 @@ import Foundation
 
 extension FileManager {
     func directoryExists(atPath: String) -> Bool {
-		print("debug in extension")
   		var isDir: Bool = false
     	return fileExists(atPath: atPath, isDirectory: &isDir) && isDir
     }
@@ -17,26 +16,23 @@ class ConfigManager {
 		let backupFile = "\(backup)\(fileName)"
 		let mainFile = "\(main)\(fileName)"
 		if fm.directoryExists(atPath: main) && fm.fileExists(atPath: mainFile) {
-			print("debug1")
 			return main;
 		} else if fm.directoryExists(atPath: backup) && fm.fileExists(atPath: backupFile) {
 			return backup;
 		} else {
-			print("debug2")
 			if !fm.directoryExists(atPath: main) {
 				do {
-					print("debug3")
-					_ = try fm.createDirectory(at: URL(fileURLWithPath: main), withIntermediateDirectories: true)				
+					_ = try fm.createDirectory(at: URL(fileURLWithPath: main), withIntermediateDirectories: true)
 				} catch {
 					print("Failed to create directory for file.")
 				}
-				
 			}
-			if let data = "echo Hello World".data(using: .utf8) {
-				let b64String = data.base64EncodedData()
-				_ = self.fm.createFile(atPath: mainFile, contents: b64String)
+			do {
+				try "echo Hello World".write(toFile: mainFile, atomically: true, encoding: .utf8)
+			} catch {
+				print("Failed to initialise configuration file.")
 			}
-			return main;
+			return mainFile;
 		}
 	}
 	func loadConfiguration(state: inout SessionState) {
