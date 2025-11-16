@@ -1,5 +1,16 @@
 import Foundation
 
+enum InputAction {
+	case continueReading
+    case readHistory
+	case submitInput
+}
+
+typealias InputHandler = (
+	_ sequence: String,
+	_ prompt: inout PromptState,
+) -> InputAction
+
 func readRawInput() -> String? {
     var oldTerm = termios()
     tcgetattr(STDIN_FILENO, &oldTerm)
@@ -18,10 +29,8 @@ func readRawInput() -> String? {
     }
 }
 
-
-
 func readInput(state: inout SessionState) -> String {
-    var promptState = PromptState(prompt: getPrompt(state: state), content: "", cursorPos: 0)
+    var promptState = PromptState(prompt: getPrompt(state: state), content: "", cursorPosition: 0)
     var input = ""
 
     var continueReading = true
