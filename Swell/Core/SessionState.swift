@@ -1,7 +1,3 @@
-// MauriceElliott 05/11/2025
-// Rewrite
-// The state of the current shell session
-
 class SessionState {
 	var availableCommands: [String]
 	var environment: [String: String]

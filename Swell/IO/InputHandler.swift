@@ -18,7 +18,10 @@ func readRawInput() -> String? {
     }
 }
 
+
+
 func readInput(state: inout SessionState) -> String {
+    var promptState = PromptState(prompt: getPrompt(state: state), content: "", cursorPos: 0)
     var input = ""
 
     var continueReading = true
@@ -42,17 +45,6 @@ func readInput(state: inout SessionState) -> String {
                     input.removeLast()
                     print("\u{1B}[1D\u{1B}[K", terminator: "")
                 }
-
-            /*
-                So, when sending an up or down arrow key as raw input
-                u{1B} is sent, followed by a lone [ followed by either A or B
-                In other scenarios, you'd expect them to be sent all at once
-                But for some reason in my case they are being sent separately.
-
-                TODO: Fix up and down arrow input handling
-                Either this needs to be abstracted or I need to find a better way to resolve this?
-                */
-
             case "\u{1B}":
                 readingArrowKeys = true;
             case "[":
