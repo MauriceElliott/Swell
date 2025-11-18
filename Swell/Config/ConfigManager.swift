@@ -1,21 +1,38 @@
 import Foundation
 
+extension FileManager {
+    func directoryExists(atPath: String) -> Bool {
+  		var isDir: Bool = false
+    	return fileExists(atPath: atPath, isDirectory: &isDir) && isDir
+    }
+}
+
 class ConfigManager {
 	let fm = FileManager.default
 	func getFileDirectory(_ homeDir: String) -> String {
-		let main = "\(homeDir)/.config/swell/config.swell"
-		let backup = "\(homeDir)/swell/config.swell"
-
-		if self.fm.fileExists(atPath: main) {
+		let main = "\(homeDir)/.config/swell/"
+		let backup = "\(homeDir)/.swell/"
+		let fileName = "config.swell"
+		let backupFile = "\(backup)\(fileName)"
+		let mainFile = "\(main)\(fileName)"
+		if fm.directoryExists(atPath: main) && fm.fileExists(atPath: mainFile) {
 			return main;
-		} else if self.fm.fileExists(atPath: backup) {
+		} else if fm.directoryExists(atPath: backup) && fm.fileExists(atPath: backupFile) {
 			return backup;
 		} else {
-			if let data = "echo Hello World".data(using: .utf8) {
-				let b64String = data.base64EncodedData()
-				_ = self.fm.createFile(atPath: main, contents: b64String)
+			if !fm.directoryExists(atPath: main) {
+				do {
+					_ = try fm.createDirectory(at: URL(fileURLWithPath: main), withIntermediateDirectories: true)
+				} catch {
+					print("Failed to create directory for file.")
+				}
 			}
-			return main;
+			do {
+				try "echo Hello World".write(toFile: mainFile, atomically: true, encoding: .utf8)
+			} catch {
+				print("Failed to initialise configuration file.")
+			}
+			return mainFile;
 		}
 	}
 	func loadConfiguration(state: inout SessionState) {
