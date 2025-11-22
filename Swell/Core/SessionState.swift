@@ -5,7 +5,6 @@ class SessionState {
     let homeDir: String
     var curDir: String
     var history: [Command]
-    var historyIndex: Int
 	var cont: Bool
     internal init(
 		environment: [String: String],
@@ -18,7 +17,6 @@ class SessionState {
         self.curDir = currentDirectory
         self.aliases = [:]
         self.history = []
-        self.historyIndex = 0
 		self.cont = true
     }
 }

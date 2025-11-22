@@ -3,4 +3,5 @@ struct PromptState {
 	var content: String
 	var cursorPosition: Int
 	var continueReading: Bool
+	var historyIndex: Int
 }

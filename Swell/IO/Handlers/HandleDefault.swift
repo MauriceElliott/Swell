@@ -1,4 +1,4 @@
-func handleDefault(_ sequence: String, _ prompt: inout PromptState) -> InputAction {
+func handleDefault(_ sequence: String, _ prompt: inout PromptState, _ session: borrowing SessionState) -> InputAction {
     print(sequence, terminator: "")
 	prompt.content += sequence
 

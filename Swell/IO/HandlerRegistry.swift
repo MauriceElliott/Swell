@@ -7,6 +7,7 @@ enum InputAction {
 typealias InputHandler = (
 	_ sequence: String,
 	_ prompt: inout PromptState,
+	_ session: borrowing SessionState,
 ) -> InputAction
 
 class HandlerRegistry {
@@ -15,13 +16,13 @@ class HandlerRegistry {
 		self.handlers = [:]
 		self.register(sequence: "\r", handler: handleEnter)
 	}
-	func register(sequence: String, handler: InputHandler) {
+	func register(sequence: String, handler: @escaping InputHandler) {
 		handlers[sequence] = handler
 	}
 	func get(sequence: String) -> InputHandler {
 		if let handler = handlers[sequence] {
 			return handler
 		}
-		return HandleDefault()
+		return handleDefault
 	}
 }

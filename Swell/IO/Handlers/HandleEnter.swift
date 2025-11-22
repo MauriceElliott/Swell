@@ -1,4 +1,4 @@
-func handleEnter(_ seqence: String, _ prompt: inout PromptState) -> InputAction {
+func handleEnter(_ sequence: String, _ prompt: inout PromptState, _ session: borrowing SessionState) -> InputAction {
     print("\n", terminator: "")
 	return InputAction.submitInput
 }

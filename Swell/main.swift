@@ -4,7 +4,6 @@ var sessionState = ConfigManager().initSessionState()
 ConfigManager().loadConfiguration(state: &sessionState)
 while sessionState.cont {
     print(getPrompt(state: sessionState), terminator: "")
-    fflush(stdout)
-
+    try? FileHandle.standardOutput.synchronize()
     evaluate(node: parse(input: readInput(state: &sessionState)), state: &sessionState)
 }
