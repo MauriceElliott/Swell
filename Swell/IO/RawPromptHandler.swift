@@ -34,7 +34,6 @@ func readInput(state: inout SessionState) -> String {
     while promptState.continueReading {
         let sCharacter = readRawInput()
         if sCharacter != nil {
-
             switch sCharacter! {
             case "\r":
                 continueReading = false

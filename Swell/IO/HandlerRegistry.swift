@@ -13,7 +13,7 @@ class HandlerRegistry {
 	private var handlers: [String: InputHandler ]
 	init() {
 		self.handlers = [:]
-		self.register("\r", handleEnter)
+		self.register(sequence: "\r", handler: handleEnter)
 	}
 	func register(sequence: String, handler: InputHandler) {
 		handlers[sequence] = handler
@@ -22,6 +22,6 @@ class HandlerRegistry {
 		if let handler = handlers[sequence] {
 			return handler
 		}
-		return nil
+		return HandleDefault()
 	}
 }
