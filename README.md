@@ -1,4 +1,4 @@
-### Swell
+## Swell
 
 <img src="resources/Swell_logo.png" align="right" />
 
