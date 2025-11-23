@@ -1,6 +1,6 @@
 ## Swell
 
-<img src="resources/Swell_logo_invisible_bg.png" align="right" />
+<img src="resources/Swell_logo.png" align="right" />
 
 A shell written in swift.
 
