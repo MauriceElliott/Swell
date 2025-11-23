@@ -8,8 +8,6 @@ My intent with Swell is to make a scripting language I can use and enjoy for dai
 
 Swell shell as I like to think of it takes influences from the my daily work, I do DevOps for a day job, and while I do that job, I drink a lot of tea. The name Swell comes from Swift and Shell, and Swell in Bri'ish means good, i.e. "Swell weather we're having today old chap!". For this reason alone, I want swell to be tea themed as it makes up a large part of my day and feels right.
 
----
-
 ## Building
 
 Swell requires Swift 6.2 or later. Currently it only builds on Linux. We recommend using [Swiftly](https://swift-server.github.io/swiftly/) to manage your Swift installation.
@@ -41,5 +39,4 @@ Swell is still early days. Here's what needs to be implemented:
 - **Closures** - First-class functions
 - **POSIX mode** - Compatibility with standard shell scripts when needed
 
----
 
