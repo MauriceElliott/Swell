@@ -8,7 +8,7 @@ My intent with Swell is to make a scripting language I can use and enjoy for dai
 
 "Swell shell" as I like to think of it takes influences from the my daily work, I do DevOps for a day job. The name Swell comes from Swift and Shell, and Swell in Bri'ish means good, i.e. "Swell weather we're having today old chap!". Its really not important, but like most unimportant things, its spent far too much time living rent free in my head.
 
-This project started off as something I thought might go somewhere, but as soon as I'd finished implementing a lot of the core functionality, I realised I'd hit a roadblock in terms of further implementation, the structure and procedural nature was just too restrictive. After about 10 months of it being out of sight I decided to give it another go, update it to the latest version of Swift, remove its dependency on xcode. Re design the structure for better extensibility. It has leased new life and the programming I've done on this project so far has been some of the most enjoyable of my career.
+This project started off as something I thought might go somewhere, but as soon as I'd finished implementing a lot of the core functionality, I realised I'd hit a roadblock in terms of further implementation. The structure and procedural nature was just too restrictive. After about 10 months of it being out of mind I decided to work on Swell again. I then updated it to the latest version of Swift, remove its dependency on xcode and re-design the structure for better extensibility. It has gained new life and the programming I've done on this project so far has been some of the most enjoyable of my career.
 
 ## Use
 
