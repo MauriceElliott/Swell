@@ -8,11 +8,11 @@ My intent with Swell is to make a scripting language I can use and enjoy for dai
 
 Swell shell as I like to think of it takes influences from the my daily work, I do DevOps for a day job, and while I do that job, I drink a lot of tea. The name Swell comes from Swift and Shell, and Swell in Bri'ish means good, i.e. "Swell weather we're having today old chap!". For this reason alone, I want swell to be tea themed as it makes up a large part of my day and feels right.
 
-## Building
+## Use
 
 To build and install Swell, run `./build.sh` from the project root. This will build the project in release mode and copy the binary to `/usr/local/bin/swell`, adding it to your path. Please adjust the script for your needs if you want to install it elsewhere.
 
-## Contributing
+## Structure
 
 Swell is a Swift-based shell for all your development and DevOps needs. The codebase is structured as follows:
 
