@@ -10,9 +10,12 @@ Swell shell as I like to think of it takes influences from the my daily work, I 
 
 ## Use
 
-To build and install Swell, from the project root run: 
+To build and install Swell, from the project root run:
+
 `./build.sh`.
+
 This will build the project in release mode and copy the binary to `/usr/local/bin/swell`, adding it to your path.
+
 Please adjust the script for your needs if you want to install it elsewhere.
 
 ## Structure
