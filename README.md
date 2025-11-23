@@ -10,8 +10,6 @@ Swell shell as I like to think of it takes influences from the my daily work, I 
 
 ## Building
 
-Swell requires Swift 6.2 or later. Currently it only builds on Linux. We recommend using [Swiftly](https://swift-server.github.io/swiftly/) to manage your Swift installation.
-
 To build and install Swell, run `./build.sh` from the project root. This will build the project in release mode and copy the binary to `/usr/local/bin/swell`, adding it to your path. Please adjust the script for your needs if you want to install it elsewhere.
 
 ## Contributing
