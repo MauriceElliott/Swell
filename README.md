@@ -1,5 +1,7 @@
 # Swell
 
+![Swell](resources/Swell_logo_invisible_bg.png)
+
 A shell written in swift.
 
 My intent with Swell is to make a scripting language I can use and enjoy for daily DevOps needs. Using Swift as the basis for the syntax, which takes a lot of stylistic choices from C and Pascal, as well as a lot of mordern improvements, we will be aiming to implement a simple procedural language for interacting with API endpoints, chaining together command line tools and utilising modern facilities provided by up to date terminal emulators.
