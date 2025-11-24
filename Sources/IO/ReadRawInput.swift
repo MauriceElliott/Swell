@@ -12,7 +12,8 @@ func readRawInput() -> String? {
 
     tcsetattr(STDIN_FILENO, TCSANOW, &oldTerm)
     if readBytes > 0 {
-        return String(cString: cCharacter)
+        let bytes = cCharacter.prefix(1).map { UInt8(bitPattern: $0) }
+        return String(decoding: bytes, as: UTF8.self)
     } else {
         return nil
     }
