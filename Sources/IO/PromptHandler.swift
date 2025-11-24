@@ -1,6 +1,6 @@
 import Foundation
 
-func readInput(state: inout SessionState) -> String {
+func handleInput(state: inout SessionState) -> String {
     var prompt = PromptState(
         prompt: getPrompt(state: state),
         content: "",
@@ -10,9 +10,6 @@ func readInput(state: inout SessionState) -> String {
     )
     let handlerRegistry = HandlerRegistry()
 
-    var input = ""
-
-    var readingArrowKeys = false
     var currentAction = InputAction.continueReading
     while currentAction == InputAction.continueReading {
         if let input = readRawInput() {

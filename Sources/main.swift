@@ -5,5 +5,5 @@ ConfigManager().loadConfiguration(state: &sessionState)
 while sessionState.cont {
     print(getPrompt(state: sessionState), terminator: "")
     try? FileHandle.standardOutput.synchronize()
-    evaluate(node: parse(input: readInput(state: &sessionState)), state: &sessionState)
+    evaluate(node: parse(input: handleInput(state: &sessionState)), state: &sessionState)
 }

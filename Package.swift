@@ -18,7 +18,7 @@ let package = Package(
         .executableTarget(
             name: "Swell",
             dependencies: [],
-            path: "Swell",
+            path: "Sources",
         ),
     ]
 )
