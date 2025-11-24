@@ -17,7 +17,7 @@ func handleInput(state: inout SessionState) -> String {
             currentAction = handler(input, &prompt, state)
             
         }
-        try? FileHandle.standardOutput.synchronize()
+
     }
     return prompt.content
 }
