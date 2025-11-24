@@ -1,6 +1,6 @@
 ## Swell
 
-<img src="resources/logo_v3.png" align="left" />
+![Swell]("resources/logo_v3.png")
 
 A shell written in swift.
 
