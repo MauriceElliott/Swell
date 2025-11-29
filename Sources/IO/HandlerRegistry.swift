@@ -15,6 +15,9 @@ class HandlerRegistry {
 	init() {
 		self.handlers = [:]
 		self.register(sequence: "\r", handler: handleEnter)
+		self.register(sequence: "\u{7F}", handler: handleBackspace)
+		self.register(sequence: "\u{1B}", handler: handleArrowKey)
+		self.register(sequence: "\t", handler: handleTab)
 	}
 	func register(sequence: String, handler: @escaping InputHandler) {
 		handlers[sequence] = handler
