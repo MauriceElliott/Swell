@@ -10,15 +10,15 @@ extension FileManager {
 class ConfigManager {
 	let fm = FileManager.default
 	func getFileDirectory(_ homeDir: String) -> String {
-		let main = "\(homeDir)/.config/swell/"
-		let backup = "\(homeDir)/.swell/"
+		let main = "\(homeDir).config/swell/"
+		let backup = "\(homeDir).swell/"
 		let fileName = "config.swell"
 		let backupFile = "\(backup)\(fileName)"
 		let mainFile = "\(main)\(fileName)"
 		if fm.directoryExists(atPath: main) && fm.fileExists(atPath: mainFile) {
-			return main;
+			return mainFile;
 		} else if fm.directoryExists(atPath: backup) && fm.fileExists(atPath: backupFile) {
-			return backup;
+			return backupFile;
 		} else {
 			if !fm.directoryExists(atPath: main) {
 				do {
@@ -37,6 +37,7 @@ class ConfigManager {
 	}
 	func loadConfiguration(state: inout SessionState) {
 		let fileDir = getFileDirectory(state.homeDir)
+		print("debug filedir: \(fileDir)")
 		var configFileContents = ""
     	do {
     	    configFileContents = try String(contentsOfFile: fileDir, encoding: .utf8)
