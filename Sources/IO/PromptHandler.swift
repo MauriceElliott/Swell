@@ -15,9 +15,7 @@ func handleInput(state: inout SessionState) -> String {
         if let input = readRawInput() {
             let handler = handlerRegistry.get(sequence: input)
             currentAction = handler(input, &prompt, state)
-            
         }
-
     }
     return prompt.content
 }
