@@ -43,4 +43,5 @@ Swell is still early days. Here's what needs to be implemented:
 - **Closures** - First-class functions
 - **POSIX mode** - Compatibility with standard shell scripts when needed
 
-
+## Known Issues
+- **fflush(nil)** - This is due to an issue where stdout cannot be used on linux due to concurrency issues, this will be replaced with something more permanent once I've worked out what that is.

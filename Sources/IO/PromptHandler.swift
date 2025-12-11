@@ -16,6 +16,7 @@ func handleInput(state: inout SessionState) -> String {
             let handler = handlerRegistry.get(sequence: input)
             currentAction = handler(input, &prompt, state)
         }
+        flush_stdout()
     }
     return prompt.content
 }

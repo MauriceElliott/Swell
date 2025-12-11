@@ -1,11 +1,14 @@
 import Foundation
 
-//this is just here for testing, should be removed once env is retrieved correctly
 
+// There are a lot of low level C functions called here
+// That might be fine for the forseeable future and might just be something we leave and let live
+// But I can't imagine there isn't a better way to achieve making syscalls in Swift.
+// We should also have more and better validation around arguments, i.e. make command a Command input
+// and then convert it to string on this side, then we don't need to split it into arguments input.
 func spawnProcess(command: String, arguments: [String], state: borrowing SessionState) {
     let path = command
     let arguments = arguments
-    //convert to argument that is readable by the C command.
     var argv = arguments.map { strdup($0) }
 
     // Null-terminate the array
@@ -47,7 +50,6 @@ func spawnProcess(command: String, arguments: [String], state: borrowing Session
         print("Failed to spawn process, error code: \(spawnResult)")
     }
 
-    // Free the allocated memory
     for arg in argv {
         free(arg)
     }

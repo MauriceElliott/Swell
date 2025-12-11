@@ -2,8 +2,9 @@ import Foundation
 
 var sessionState = ConfigManager().initSessionState()
 ConfigManager().loadConfiguration(state: &sessionState)
-setbuf(stdout, nil)
 while sessionState.cont {
     print(getPrompt(state: sessionState), terminator: "")
+    flush_stdout()
     evaluate(node: parse(input: handleInput(state: &sessionState)), state: &sessionState)
+    flush_stdout()
 }
