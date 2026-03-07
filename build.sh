@@ -1,8 +1,8 @@
 #! /usr/bin/env bash
 
-swift build -c release 2>&1 | grep -v "no version information available" 2>/dev/null
+cargo build --release 2>&1
 if [[ $(id -u) == 0 ]]; then
-  cp $(swift build -c release --show-bin-path 2>&1 | grep -v "no version information available" 2>/dev/null)/swell /usr/local/bin/swell
+  cp target/release/swell /usr/local/bin/swell
 else
-  sudo cp $(swift build -c release --show-bin-path 2>&1 | grep -v "no version information available" 2>/dev/null)/swell /usr/local/bin/swell
+  sudo cp target/release/swell /usr/local/bin/swell
 fi
