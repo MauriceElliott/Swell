@@ -20,10 +20,8 @@ evaluate :: proc(node: types.AST_Node, state: ^types.Session_State) {
 		for n in v.nodes {
 			evaluate(n, state)
 		}
-
 	case types.AST_Empty:
 		// Nothing to do
-
 	case:
 		spawn_process("", {""}, state)
 	}
