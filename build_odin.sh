@@ -1,11 +1,13 @@
 #!/bin/bash
 set -e
 
-odin build src/ -out:swell -o:speed
+rm -d -r .build
+mkdir .build
+odin build src/ -out:.build/swell -o:speed
 
 echo "Built swell successfully"
 
 if [ "$1" = "install" ]; then
-    sudo cp swell /usr/local/bin/swell
+    sudo cp .build/swell /usr/local/bin/
     echo "Installed to /usr/local/bin/swell"
 fi
