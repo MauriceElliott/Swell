@@ -25,11 +25,11 @@ use `./build.sh install` to add swell to `/usr/local/bin`
 Swell is a Swift-based shell for all your development and DevOps needs. The codebase is structured as follows:
 
 - **Swell/main** - Entry point for the shell
-- **Swell/Parser/** - Tokenization and parsing of shell commands into an AST
-- **Swell/Models/** - Core data structures (Command, ASTNode, PromptState)
-- **Swell/IO/** - Input handling, key handlers, and process spawning
-- **Swell/BuiltIns/** - Built-in commands like cd, exit, and alias
-- **Swell/Config/** - Configuration management
+- **Swell/parser/** - Tokenization and parsing of shell commands into an AST
+- **Swell/types/** - Structs matching domain objects
+- **Swell/io/** - Input handling, key handlers, and process spawning
+- **Swell/core/** - Built-in commands like cd, exit, and alias, as well as core functionality like processes spawning etc.
+- **Swell/config/** - Configuration management
 
 The shell reads input character by character in raw mode, parses commands, and either executes built-ins or spawns external processes. We're building something practical and enjoyable for daily use, not an academic exercise.
 
