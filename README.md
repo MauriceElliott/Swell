@@ -20,9 +20,13 @@ To build and install Swell, from the project root run:
 
 use `./build.sh install` to add swell to `/usr/local/bin`
 
+## Design
+
+`.swl` is the file extension for swell script files.
+
 ## Structure
 
-Swell is a Swift-based shell for all your development and DevOps needs. The codebase is structured as follows:
+Swell is a shell for all your development and DevOps needs. The codebase is structured as follows:
 
 - **Swell/main** - Entry point for the shell
 - **Swell/parser/** - Tokenization and parsing of shell commands into an AST
@@ -44,4 +48,3 @@ Swell is still early days. Here's what needs to be implemented:
 - **Functions** - User-defined functions
 - **Closures** - First-class functions
 - **POSIX mode** - Compatibility with standard shell scripts when needed
-

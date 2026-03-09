@@ -1,0 +1,19 @@
+[
+  {
+    "label": "Build",
+    "command": "./build.sh install; swell",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "reveal_target": "dock",
+    "hide": "on_success",
+    "shell": {
+      "with_arguments": {
+        "program": "/usr/local/bin/fish",
+        "args": ["--login", "-c", "set -gx UNAT true"],
+      },
+    },
+    "show_summary": true,
+    "show_command": true,
+  },
+]
