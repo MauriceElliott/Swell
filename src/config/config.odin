@@ -10,7 +10,7 @@ import "../core"
 get_file_directory :: proc(home_dir: string) -> string {
 	main_dir := strings.concatenate({home_dir, ".config/swell/"}, context.temp_allocator)
 	backup_dir := strings.concatenate({home_dir, ".swell/"}, context.temp_allocator)
-	file_name := "config.swell"
+	file_name := "config.swl"
 	main_file := strings.concatenate({main_dir, file_name}, context.temp_allocator)
 	backup_file := strings.concatenate({backup_dir, file_name}, context.temp_allocator)
 
