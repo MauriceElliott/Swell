@@ -4,16 +4,12 @@ set -e
 rm -d -r .build
 mkdir .build
 
-if [ "$1" = "debug" ]; then
-    odin build src/ -out:.build/swell -debug -o:none
-    echo "Built swell in debug mode"
-    lldb .build/swell
-else
+if [ "$1" = "install" ]; then
     odin build src/ -out:.build/swell -o:speed
     echo "Built swell successfully"
-fi
-
-if [ "$1" = "install" ]; then
     sudo cp .build/swell /usr/local/bin/
     echo "Installed to /usr/local/bin/swell"
+else
+    odin build src/ -out:.build/swell -debug -o:none
+    echo "Built swell in debug mode"
 fi
