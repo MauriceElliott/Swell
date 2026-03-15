@@ -1,12 +1,14 @@
 package shell_io
 
+import "../types"
 import "core:fmt"
 import "core:strings"
-import "../types"
 
 Direction :: enum {
 	Up,
 	Down,
+	Left,
+	Right,
 }
 
 handle_enter :: proc(
@@ -37,6 +39,7 @@ handle_default :: proc(
 ) -> types.Input_Action {
 	prompt.content = strings.concatenate({prompt.content, sequence}, context.temp_allocator)
 	fmt.print(sequence)
+	prompt.cursor_pos += 1
 	return .Continue_Reading
 }
 
@@ -53,20 +56,34 @@ handle_arrow_key :: proc(
 		if !ok2 do return .Continue_Reading
 
 		dir: Direction
-		if letter == "B" {
+		switch letter {
+		case "B":
 			dir = .Down
-		} else {
+		case "A":
 			dir = .Up
+		case "D":
+			dir = .Left
+		case "C":
+			dir = .Right
 		}
 
-		// Clear current content from display
 		for _ in prompt.content {
 			fmt.print("\x1b[D\x1b[K")
 		}
 
-		previous := read_history(dir, prompt, session)
-		prompt.content = previous
-		fmt.print(prompt.content)
+		if dir == .Up || dir == .Down {
+			previous := read_history(dir, prompt, session)
+			prompt.content = previous
+			fmt.print(prompt.content)
+			prompt.cursor_pos = len(prompt.content)
+		} else if dir == .Left {
+			fmt.print("\x1b[1D")
+			prompt.cursor_pos -= 1
+		} else if dir == .Right {
+			fmt.print("\x1b[1C")
+			prompt.cursor_pos += 1
+		}
+
 	}
 	return .Continue_Reading
 }
@@ -129,3 +146,4 @@ tab_complete :: proc(fuzz: string, state: ^types.Session_State) -> string {
 
 	return fuzz
 }
+

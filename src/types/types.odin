@@ -3,6 +3,7 @@ package types
 Command :: struct {
 	command:   string,
 	arguments: []string,
+	raw:       string,
 }
 
 AST_Node :: union {
@@ -45,3 +46,4 @@ Session_State :: struct {
 	history:            [dynamic]Command,
 	cont:               bool,
 }
+
