@@ -1,25 +1,27 @@
 package config
 
+import "../core"
+import "../parser"
+import "../types"
 import "core:fmt"
 import "core:os"
 import "core:strings"
-import "../types"
-import "../parser"
-import "../core"
 
 get_file_directory :: proc(home_dir: string) -> string {
+	defer free_all(context.temp_allocator)
+
+	file_name := "config.swl"
 	main_dir := strings.concatenate({home_dir, ".config/swell/"}, context.temp_allocator)
 	backup_dir := strings.concatenate({home_dir, ".swell/"}, context.temp_allocator)
-	file_name := "config.swl"
-	main_file := strings.concatenate({main_dir, file_name}, context.temp_allocator)
-	backup_file := strings.concatenate({backup_dir, file_name}, context.temp_allocator)
+	main_file := strings.concatenate({main_dir, file_name}, context.allocator)
+	backup_file := strings.concatenate({backup_dir, file_name}, context.allocator)
 
 	if os.is_dir(main_dir) && os.exists(main_file) {
-		return strings.clone(main_file)
+		return main_file
 	}
 
 	if os.is_dir(backup_dir) && os.exists(backup_file) {
-		return strings.clone(backup_file)
+		return backup_file
 	}
 
 	// Create main config directory and default file
@@ -35,12 +37,11 @@ get_file_directory :: proc(home_dir: string) -> string {
 		fmt.eprintln("Failed to initialise configuration file.")
 	}
 
-	return strings.clone(main_file)
+	return main_file
 }
 
 load_configuration :: proc(state: ^types.Session_State) {
 	file_dir := get_file_directory(state.home_dir)
-	defer delete(file_dir)
 
 	fmt.printfln("debug filedir: %s", file_dir)
 
@@ -110,3 +111,4 @@ update_available_commands :: proc(state: ^types.Session_State) {
 		os.file_info_slice_delete(entries, context.temp_allocator)
 	}
 }
+
