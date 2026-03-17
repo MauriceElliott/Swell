@@ -17,7 +17,14 @@ main :: proc() {
 	state := config.init_session_state()
 	config.load_configuration(&state)
 
+	//Prompt Allocator
+	// Used while the current prompt is active, free'd after each "return key"
+	prompt_arena: mem.Arena
+	mem.arena_init(&prompt_arena, 1 * mem.MEGABYTE)
+	context.allocator = mem.arena_allocator(&prompt_arena)
+
 	for state.cont {
+		defer mem.arena_free_all(&prompt_arena)
 		prompt_str := core.get_prompt(&state)
 		fmt.print(prompt_str)
 		io.flush_stdout()
@@ -26,8 +33,6 @@ main :: proc() {
 		node := parser.parse(input)
 		core.evaluate(node, &state)
 		io.flush_stdout()
-
-		free_all(context.temp_allocator)
 	}
 }
 

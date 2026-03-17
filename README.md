@@ -24,18 +24,80 @@ use `./build.sh install` to add swell to `/usr/local/bin`
 
 `.swl` is the file extension for swell script files.
 
-## Structure
+## Architecture
 
-Swell is a shell for all your development and DevOps needs. The codebase is structured as follows:
+### Current Structure
 
-- **Swell/main** - Entry point for the shell
-- **Swell/parser/** - Tokenization and parsing of shell commands into an AST
-- **Swell/types/** - Structs matching domain objects
-- **Swell/io/** - Input handling, key handlers, and process spawning
-- **Swell/core/** - Built-in commands like cd, exit, and alias, as well as core functionality like processes spawning etc.
-- **Swell/config/** - Configuration management
+Swell (~650 lines of Odin) is structured as modular, focused packages:
 
-The shell reads input character by character in raw mode, parses commands, and either executes built-ins or spawns external processes. We're building something practical and enjoyable for daily use, not an academic exercise.
+```
+src/
+├── main.odin              # Entry point - main loop
+├── types/                 # Domain types
+│   └── types.odin        # Session_State, Command, AST_Node, Input_Handler, etc.
+├── parser/               # Lexing and parsing
+│   └── parser.odin       # String → AST_Node (commands and pipelines)
+├── io/                   # Input/output handling
+│   ├── raw_input.odin    # Character-by-character raw terminal input
+│   ├── prompt_handler.odin # Main input loop, character accumulation, handler dispatch
+│   ├── handlers.odin      # Key handlers (insert, backspace, tab completion, enter)
+│   └── handler_registry.odin # Registry mapping keys to handlers
+├── core/                 # Evaluation and builtins
+│   ├── evaluator.odin    # AST evaluation, command execution
+│   ├── builtins.odin     # Built-in commands (cd, exit, alias)
+│   ├── alias.odin        # Alias resolution
+│   └── process_spawner.odin # External process spawning
+├── config/               # Configuration and state initialization
+│   └── config.odin       # Load config files, initialize session state
+└── resources/            # Logo and config files
+```
+
+### Data Flow
+
+1. **Input Phase**: `read_raw_input()` reads one byte at a time in raw terminal mode
+2. **Handler Phase**: `handle_input()` dispatches bytes to registered key handlers (printable chars, backspace, tab, etc.)
+3. **Accumulation**: Handlers modify `Prompt_State` (buffer content, cursor position)
+4. **Parse**: User presses Enter → `parser.parse()` converts string to AST_Node
+5. **Evaluate**: `evaluate()` interprets the AST (built-in or process spawn)
+6. **Cleanup**: `free_all(context.temp_allocator)` clears per-iteration allocations
+
+### Key Concepts
+
+- **Raw Terminal Mode**: Terminal `ICANON` flag disabled for character-by-character input
+- **Handler Registry**: Maps input bytes/sequences to handler functions
+- **AST Representation**: Simple types (Command, Pipeline) instead of complex tree
+- **Memory Management**: Program-wide arena for persistent data; temp allocator for per-iteration garbage
+
+## Rebuild Guide
+Due to suddenly realising I have no idea how to do proper memory allocation, but still want to extend my shell I am going to rewrite the functionality from scratch and relearn the process to get a better idea of Odin as a language, manual memory management and the direction of Swell itself.
+
+### Phase 1: Foundation
+1. Create `types.odin` with: `Command`, `Session_State`, `Input_Handler`, `Prompt_State`
+2. Create `parser.odin` — parse simple command strings into `Command` structs
+3. Test with basic "echo hello" → execution
+
+### Phase 2: I/O
+1. Implement `raw_input.odin` — raw terminal mode and character reading
+2. Implement `prompt_handler.odin` — character accumulation loop
+3. Implement basic `handlers.odin` — printable chars, backspace, enter key
+4. Test interactive input
+
+### Phase 3: State & Execution
+1. Implement `evaluator.odin` — execute parsed commands
+2. Implement `process_spawner.odin` — spawn external processes with stdio forwarding
+3. Implement `builtins.odin` — cd, exit, alias built-ins
+4. Test with mixed built-ins and external commands
+
+### Phase 4: Config & Polish
+1. Implement `config.odin` — load config files, build available commands list
+2. Implement `handler_registry.odin` and tab completion
+3. Implement command history (arrow keys)
+4. Add alias handling
+
+### Memory Management Strategy
+- **Program Arena** (8 MB): Session state, history, aliases, available commands
+- **Temp Allocator**: Per-iteration allocations (input, parsed nodes, temp strings)
+- **Pattern**: Set `context.allocator = arena_allocator(&program_arena)` in main, call `free_all(context.temp_allocator)` at loop end
 
 ## Goals
 
