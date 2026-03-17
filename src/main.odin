@@ -25,6 +25,7 @@ main :: proc() {
 
 	for state.cont {
 		defer mem.arena_free_all(&prompt_arena)
+		defer free_all(context.temp_allocator)
 		prompt_str := core.get_prompt(&state)
 		fmt.print(prompt_str)
 		io.flush_stdout()

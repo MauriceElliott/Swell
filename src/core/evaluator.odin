@@ -14,7 +14,7 @@ evaluate :: proc(node: types.AST_Node, state: ^types.Session_State) {
 			}
 			spawn_process(v.command, v.arguments, state)
 		}
-		append(&state.history, clone_command(v))
+		append(&state.history, clone_command(v, state.persistent_allocator))
 
 	case types.Pipeline:
 		for n in v.nodes {

@@ -84,13 +84,14 @@ init_session_state :: proc() -> types.Session_State {
 	env["COLORTERM"] = "truecolor"
 
 	state := types.Session_State {
-		available_commands = make([dynamic]string),
-		environment        = env,
-		aliases            = make(map[string]types.Command),
-		home_dir           = home_dir,
-		cur_dir            = cur_dir,
-		history            = make([dynamic]types.Command),
-		cont               = true,
+		available_commands   = make([dynamic]string),
+		environment          = env,
+		aliases              = make(map[string]types.Command),
+		home_dir             = home_dir,
+		cur_dir              = cur_dir,
+		history              = make([dynamic]types.Command),
+		cont                 = true,
+		persistent_allocator = context.allocator,
 	}
 
 	update_available_commands(&state)
@@ -106,7 +107,7 @@ update_available_commands :: proc(state: ^types.Session_State) {
 		entries, err := os.read_directory_by_path(dir, -1, context.temp_allocator)
 		if err != nil do continue
 		for entry in entries {
-			append(&state.available_commands, strings.clone(entry.name))
+			append(&state.available_commands, strings.clone(entry.name, state.persistent_allocator))
 		}
 		os.file_info_slice_delete(entries, context.temp_allocator)
 	}
