@@ -1,17 +1,17 @@
 package parser
 
-import "core:strings"
 import "../types"
+import "core:strings"
 
 parse :: proc(input: string) -> types.AST_Node {
 	if len(input) == 0 do return types.AST_Empty{}
 
-	split_input := strings.fields(input, context.temp_allocator)
+	split_input := strings.fields(input, context.allocator)
 	if len(split_input) == 0 do return types.AST_Empty{}
 
 	command: string
 	arguments: [dynamic]string
-	arguments.allocator = context.temp_allocator
+	arguments.allocator = context.allocator
 
 	if strings.contains(split_input[0], "/") {
 		command = split_input[0]
@@ -34,8 +34,5 @@ parse :: proc(input: string) -> types.AST_Node {
 		}
 	}
 
-	return types.Command {
-		command   = command,
-		arguments = arguments[:],
-	}
+	return types.Command{command = command, arguments = arguments[:]}
 }

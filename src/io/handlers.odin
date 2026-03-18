@@ -37,7 +37,7 @@ handle_default :: proc(
 	prompt: ^types.Prompt_State,
 	session: ^types.Session_State,
 ) -> types.Input_Action {
-	prompt.content = strings.concatenate({prompt.content, sequence}, context.temp_allocator)
+	prompt.content = strings.concatenate({prompt.content, sequence}, context.allocator)
 	fmt.print(sequence)
 	prompt.cursor_pos += 1
 	return .Continue_Reading
@@ -103,7 +103,7 @@ read_history :: proc(
 
 	entry := session.history[prompt.history_index]
 
-	builder := strings.builder_make(context.temp_allocator)
+	builder := strings.builder_make(context.allocator)
 	for arg in entry.arguments {
 		strings.write_string(&builder, arg)
 		strings.write_string(&builder, " ")
@@ -124,7 +124,7 @@ handle_tab :: proc(
 ) -> types.Input_Action {
 	completed := tab_complete(prompt.content, session)
 	if completed != prompt.content {
-		prompt.content = strings.concatenate({prompt.content, completed}, context.temp_allocator)
+		prompt.content = strings.concatenate({prompt.content, completed}, context.allocator)
 		fmt.print(completed)
 	}
 	return .Continue_Reading
@@ -133,7 +133,7 @@ handle_tab :: proc(
 tab_complete :: proc(fuzz: string, state: ^types.Session_State) -> string {
 	if len(fuzz) == 0 do return ""
 
-	words := strings.fields(fuzz, context.temp_allocator)
+	words := strings.fields(fuzz, context.allocator)
 	if len(words) == 1 && fuzz[len(fuzz) - 1] != ' ' {
 		for cmd in state.available_commands {
 			if strings.has_prefix(cmd, fuzz) {
@@ -146,4 +146,3 @@ tab_complete :: proc(fuzz: string, state: ^types.Session_State) -> string {
 
 	return fuzz
 }
-

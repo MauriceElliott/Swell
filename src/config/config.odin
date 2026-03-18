@@ -8,8 +8,6 @@ import "core:os"
 import "core:strings"
 
 get_file_directory :: proc(home_dir: string) -> string {
-	defer free_all(context.temp_allocator)
-
 	file_name := "config.swl"
 	main_dir := strings.concatenate({home_dir, ".config/swell/"}, context.temp_allocator)
 	backup_dir := strings.concatenate({home_dir, ".swell/"}, context.temp_allocator)
@@ -107,9 +105,11 @@ update_available_commands :: proc(state: ^types.Session_State) {
 		entries, err := os.read_directory_by_path(dir, -1, context.temp_allocator)
 		if err != nil do continue
 		for entry in entries {
-			append(&state.available_commands, strings.clone(entry.name, state.persistent_allocator))
+			append(
+				&state.available_commands,
+				strings.clone(entry.name, state.persistent_allocator),
+			)
 		}
 		os.file_info_slice_delete(entries, context.temp_allocator)
 	}
 }
-
