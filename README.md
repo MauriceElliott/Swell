@@ -68,37 +68,6 @@ src/
 - **AST Representation**: Simple types (Command, Pipeline) instead of complex tree
 - **Memory Management**: Program-wide arena for persistent data; temp allocator for per-iteration garbage
 
-## Rebuild Guide
-Due to suddenly realising I have no idea how to do proper memory allocation, but still want to extend my shell I am going to rewrite the functionality from scratch and relearn the process to get a better idea of Odin as a language, manual memory management and the direction of Swell itself.
-
-### Phase 1: Foundation
-1. Create `types.odin` with: `Command`, `Session_State`, `Input_Handler`, `Prompt_State`
-2. Create `parser.odin` — parse simple command strings into `Command` structs
-3. Test with basic "echo hello" → execution
-
-### Phase 2: I/O
-1. Implement `raw_input.odin` — raw terminal mode and character reading
-2. Implement `prompt_handler.odin` — character accumulation loop
-3. Implement basic `handlers.odin` — printable chars, backspace, enter key
-4. Test interactive input
-
-### Phase 3: State & Execution
-1. Implement `evaluator.odin` — execute parsed commands
-2. Implement `process_spawner.odin` — spawn external processes with stdio forwarding
-3. Implement `builtins.odin` — cd, exit, alias built-ins
-4. Test with mixed built-ins and external commands
-
-### Phase 4: Config & Polish
-1. Implement `config.odin` — load config files, build available commands list
-2. Implement `handler_registry.odin` and tab completion
-3. Implement command history (arrow keys)
-4. Add alias handling
-
-### Memory Management Strategy
-- **Program Arena** (8 MB): Session state, history, aliases, available commands
-- **Temp Allocator**: Per-iteration allocations (input, parsed nodes, temp strings)
-- **Pattern**: Set `context.allocator = arena_allocator(&program_arena)` in main, call `free_all(context.temp_allocator)` at loop end
-
 ## Goals
 
 Swell is still early days. Here's what needs to be implemented:

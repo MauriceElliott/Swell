@@ -40,13 +40,12 @@ Input_Handler :: proc(
 ) -> Input_Action
 
 Session_State :: struct {
-	available_commands:  [dynamic]string,
-	environment:         map[string]string,
-	aliases:             map[string]Command,
-	home_dir:            string,
-	cur_dir:             string,
-	history:             [dynamic]Command,
-	cont:                bool,
+	available_commands:   [dynamic]string,
+	environment:          map[string]string,
+	aliases:              map[string]Command,
+	home_dir:             string,
+	cur_dir:              string,
+	history:              [dynamic]Command,
+	cont:                 bool,
 	persistent_allocator: mem.Allocator,
 }
-

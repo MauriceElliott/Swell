@@ -1,9 +1,9 @@
 package core
 
+import "../types"
 import "core:fmt"
 import "core:os"
 import "core:strings"
-import "../types"
 
 Builtin_Proc :: proc(args: []string, state: ^types.Session_State)
 

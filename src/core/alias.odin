@@ -10,7 +10,7 @@ get_alias :: proc(cmd: types.Command, state: ^types.Session_State) -> (types.Com
 
 	result := alias
 	if len(cmd.arguments) > 1 {
-		combined := make([dynamic]string, context.temp_allocator)
+		combined := make([dynamic]string, context.allocator)
 		for a in alias.arguments {
 			append(&combined, a)
 		}
