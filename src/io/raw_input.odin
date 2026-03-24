@@ -8,7 +8,6 @@ read_raw_input :: proc() -> (string, bool) {
 	old_term: psx.termios
 	psx.tcgetattr(psx.STDIN_FILENO, &old_term)
 
-	// cfmakeraw equivalent
 	raw := old_term
 	raw.c_iflag -= {.IGNBRK, .BRKINT, .PARMRK, .ISTRIP, .INLCR, .IGNCR, .ICRNL, .IXON}
 	raw.c_oflag -= {.OPOST}
@@ -30,3 +29,4 @@ read_raw_input :: proc() -> (string, bool) {
 flush_stdout :: proc() {
 	os.flush(os.stdout)
 }
+

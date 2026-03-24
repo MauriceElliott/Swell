@@ -24,34 +24,6 @@ use `./build.sh install` to add swell to `/usr/local/bin`
 
 `.swl` is the file extension for swell script files.
 
-## Architecture
-
-### Current Structure
-
-Swell (~650 lines of Odin) is structured as modular, focused packages:
-
-```
-src/
-├── main.odin              # Entry point - main loop
-├── types/                 # Domain types
-│   └── types.odin        # Session_State, Command, AST_Node, Input_Handler, etc.
-├── parser/               # Lexing and parsing
-│   └── parser.odin       # String → AST_Node (commands and pipelines)
-├── io/                   # Input/output handling
-│   ├── raw_input.odin    # Character-by-character raw terminal input
-│   ├── prompt_handler.odin # Main input loop, character accumulation, handler dispatch
-│   ├── handlers.odin      # Key handlers (insert, backspace, tab completion, enter)
-│   └── handler_registry.odin # Registry mapping keys to handlers
-├── core/                 # Evaluation and builtins
-│   ├── evaluator.odin    # AST evaluation, command execution
-│   ├── builtins.odin     # Built-in commands (cd, exit, alias)
-│   ├── alias.odin        # Alias resolution
-│   └── process_spawner.odin # External process spawning
-├── config/               # Configuration and state initialization
-│   └── config.odin       # Load config files, initialize session state
-└── resources/            # Logo and config files
-```
-
 ### Data Flow
 
 1. **Input Phase**: `read_raw_input()` reads one byte at a time in raw terminal mode
