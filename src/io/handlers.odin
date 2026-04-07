@@ -37,10 +37,33 @@ handle_default :: proc(
 	prompt: ^types.Prompt_State,
 	session: ^types.Session_State,
 ) -> types.Input_Action {
-	prompt.content = strings.concatenate({prompt.content, sequence}, context.allocator)
-	fmt.print(sequence)
-	prompt.cursor_pos += 1
-	return .Continue_Reading
+	total_content := len(prompt.content)
+	total_prompt := len(prompt.prompt)
+	total_prompt_line := total_prompt + total_content
+	relative_cursor_pos := total_prompt_line - prompt.cursor_pos
+	if relative_cursor_pos == 0 {
+		prompt.content = strings.concatenate({prompt.content, sequence}, context.allocator)
+		fmt.print(sequence)
+		prompt.cursor_pos += 1
+		return .Continue_Reading
+	} else {
+		for _ in prompt.content {
+			fmt.print("\x1b[D\x1b[K")
+		}
+		pos_in_content := prompt.cursor_pos - total_prompt
+
+		first_half := strings.concatenate(
+			{prompt.content[0:pos_in_content], sequence},
+			context.allocator,
+		)
+		second_half := prompt.content[pos_in_content:(pos_in_content + relative_cursor_pos)]
+
+		prompt.content = strings.concatenate({first_half, second_half}, context.allocator)
+		fmt.print(prompt.content)
+
+		prompt.cursor_pos += 1
+		return .Continue_Reading
+	}
 }
 
 handle_arrow_key :: proc(
@@ -145,3 +168,4 @@ tab_complete :: proc(fuzz: string, state: ^types.Session_State) -> string {
 
 	return fuzz
 }
+
