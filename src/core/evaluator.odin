@@ -1,7 +1,7 @@
 package core
 
-import "core:strings"
 import "../types"
+import "core:strings"
 
 evaluate :: proc(node: types.AST_Node, state: ^types.Session_State) {
 	switch v in node {
@@ -11,8 +11,9 @@ evaluate :: proc(node: types.AST_Node, state: ^types.Session_State) {
 		} else {
 			if aliased, alias_ok := get_alias(v, state); alias_ok {
 				spawn_process(aliased.command, aliased.arguments, state)
+			} else {
+				spawn_process(v.command, v.arguments, state)
 			}
-			spawn_process(v.command, v.arguments, state)
 		}
 		append(&state.history, clone_command(v, state.persistent_allocator))
 
@@ -21,7 +22,7 @@ evaluate :: proc(node: types.AST_Node, state: ^types.Session_State) {
 			evaluate(n, state)
 		}
 	case types.AST_Empty:
-		// Nothing to do
+	// Nothing to do
 	case:
 		spawn_process("", {""}, state)
 	}
@@ -32,8 +33,5 @@ clone_command :: proc(cmd: types.Command, allocator := context.allocator) -> typ
 	for i := 0; i < len(cmd.arguments); i += 1 {
 		args[i] = strings.clone(cmd.arguments[i], allocator)
 	}
-	return types.Command {
-		command   = strings.clone(cmd.command, allocator),
-		arguments = args,
-	}
+	return types.Command{command = strings.clone(cmd.command, allocator), arguments = args}
 }
