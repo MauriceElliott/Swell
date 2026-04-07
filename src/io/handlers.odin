@@ -47,6 +47,9 @@ handle_default :: proc(
 		prompt.cursor_pos += 1
 		return .Continue_Reading
 	} else {
+		for i := 0; i > relative_cursor_pos; i += 1 {
+			fmt.print("\x1b[1C")
+		}
 		for _ in prompt.content {
 			fmt.print("\x1b[D\x1b[K")
 		}
