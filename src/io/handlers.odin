@@ -67,11 +67,10 @@ handle_arrow_key :: proc(
 			dir = .Right
 		}
 
-		for _ in prompt.content {
-			fmt.print("\x1b[D\x1b[K")
-		}
-
 		if dir == .Up || dir == .Down {
+			for _ in prompt.content {
+				fmt.print("\x1b[D\x1b[K")
+			}
 			previous := read_history(dir, prompt, session)
 			prompt.content = previous
 			fmt.print(prompt.content)
